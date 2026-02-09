@@ -1,0 +1,92 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: vibra_db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - vibra_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  registration-service:
+    build: ./RegistrationService  # ✅ Correct
+    container_name: registration_service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5001
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      - R2__AccessKeyId=${R2_ACCESS_KEY_ID}
+      - R2__SecretAccessKey=${R2_SECRET_ACCESS_KEY}
+      - R2__BucketName=${R2_BUCKET_NAME}
+      - R2__AccountId=${R2_ACCOUNT_ID}
+      - R2__PublicUrl=${R2_PUBLIC_URL}
+    ports:
+      - "5001:5001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - vibra_network
+
+  auth-service:  
+    build: ./JwtAuthApi  
+    container_name: auth_service
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5089
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      - JWT__Secret=${JWT_SECRET}
+      - JWT__Issuer=VibraAdmin
+      - JWT__Audience=VibraAdmin
+    ports:
+      - "5089:5089"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - vibra_network
+
+  api-gateway:
+    build: ./VibraApiGateway 
+    container_name: api_gateway
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5222
+      - RegistrationService__BaseUrl=http://registration-service:5001
+      - AdminService__BaseUrl=http://auth-service:5089
+    ports:
+      - "5222:5222"
+    depends_on:
+      - registration-service
+      - auth-service
+    networks:
+      - vibra_network
+
+  frontend:
+    build: ./vibra_atl
+    container_name: vibra_frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - api-gateway
+    networks:
+      - vibra_network
+
+volumes:
+  postgres_data:
+
+networks:
+  vibra_network:
+    driver: bridge

@@ -1,0 +1,6 @@
+@VibraApiGateway_HostAddress = http://localhost:5222
+
+GET {{VibraApiGateway_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
