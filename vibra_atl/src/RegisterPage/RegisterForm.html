@@ -1,0 +1,112 @@
+<div className="register-page">
+      <h1 className="register-title">Register for Hackathon</h1>
+
+      <form className="register-form" onSubmit={handleSubmit}>
+        <input name="firstName" type="text" placeholder="First Name" required />
+        <input name="lastName" type="text" placeholder="Last Name" required />
+        <input name="email" type="email" placeholder="School Email" required />
+        
+        <select 
+          name="school" 
+          value={selectedSchool}
+          onChange={(e) => setSelectedSchool(e.target.value)}
+          required
+        >
+          <option value="">Select School</option>
+          {schoolOptions.map((school) => (
+            <option key={school} value={school}>{school}</option>
+          ))}
+        </select>
+
+        {selectedSchool === "Other" && (
+          <input 
+            name="otherSchool" 
+            type="text" 
+            placeholder="Enter your school name" 
+            required 
+          />
+        )}
+
+        <select name="gpa">
+          <option value="">Select GPA (Optional)</option>
+          {gpaOptions.map((gpa) => (
+            <option key={gpa} value={gpa}>{gpa}</option>
+          ))}
+        </select>
+
+        <div className="group-section">
+          <label>Do you already have a group?</label>
+
+          <div className="radio-group">
+            <label>
+              <input
+                type="radio"
+                name="group"
+                value="no"
+                checked={hasGroup === "no"}
+                onChange={() => setHasGroup("no")}
+              /> No
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="group"
+                value="yes"
+                checked={hasGroup === "yes"}
+                onChange={() => setHasGroup("yes")}
+              /> Yes
+            </label>
+          </div>
+
+          {hasGroup === "yes" && (
+            <>
+              <input
+                name="groupName"
+                type="text"
+                placeholder="Group Name"
+                required={hasGroup === "yes"}
+                style={{ display: hasGroup === "yes" ? "block" : "none" }}
+              />
+            </>
+          )}
+        </div>
+
+        <div className="resume-section">
+          <label>Upload Resume (Optional - PDF, PNG, JPG)</label>
+          <input
+            type="file"
+            accept=".pdf,.png,.jpg,.jpeg"
+            onChange={(e) => setResumeFile(e.target.files ? e.target.files[0] : null)}
+            // No 'required' attribute - making it optional
+          />
+        </div>
+
+        <button type="submit" disabled={loading}>
+          {loading ? "Submitting..." : "Submit Registration"}
+        </button>
+      </form>
+
+      {/* Success Popup */}
+      {showSuccessPopup && (
+        <div className="popup-overlay" onClick={() => setShowSuccessPopup(false)}>
+          <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+            <h2>Registration Successful</h2>
+            <p>Your registration has been submitted successfully.</p>
+            <button onClick={() => setShowSuccessPopup(false)}>Close</button>
+          </div>
+        </div>
+      )}
+
+      {/* Error Popup */}
+      {showErrorPopup && (
+        <div className="popup-overlay" onClick={() => setShowErrorPopup(false)}>
+          <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+            <h2>Error</h2>
+            <p>{errorMessage}</p>
+            <button onClick={() => setShowErrorPopup(false)}>Close</button>
+          </div>
+        </div>
+    )}
+
+    <img src={WhiteCity} alt="Corner" className="WhiteCity" />
+</div>

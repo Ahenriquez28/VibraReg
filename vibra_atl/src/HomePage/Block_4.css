@@ -1,0 +1,75 @@
+.Fourth-Block{
+    width:100%;
+    background-color:#38487b;
+    display: flex;
+    flex-direction: column;
+    /* height: 100vh; */
+    position: absolute;
+}
+
+/*== Images of Sponsors Logo ++++*/
+.SponsorsTextImage {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* THIS centers the image */
+}
+
+.Sponsors-Text{
+    text-align: center;
+    margin-top:5%;
+    font-size: 2rem;
+    font-family: 'Bungee', cursive;
+    color: white;
+    z-index: 10;
+    background-color: #d43f27;
+    padding: 2%;
+    border-radius: 10px;
+
+}
+.NcrVoyix{
+    /* justify-content: center !important;
+    flex-direction: column !important; */
+    align-items: center !important;
+    width:40%;
+    height: auto;
+    z-index: 10;
+}   
+.Sponsor-link{
+    /* width:40%; */
+    align-self: center;
+    transition: background 0.3s ease;
+    cursor: pointer;
+    font-size: 1.5rem;
+    background-color: #72aabf;
+    border-radius: 12px;
+    font-family: 'Bungee', cursive;
+    padding: 12px 28px;
+    color: white;
+    z-index: 10;
+}
+.Sponsor-link:hover{
+    color:#72aabf;
+    background-color: white ;
+
+}
+
+.CornerBuilding {
+  /* position: absolute; */
+  align-self: end;
+  margin-top: -20%;
+  z-index: 0;
+  /* right: 0; */
+  width: 50%;
+  /* margin-top: auto; */
+  /* width: 2%;    */
+
+  height: auto;
+}
+
+@media ((min-width: 1200px ) and (max-width: 1450px)){
+    .Fourth-Block{
+        padding-top: 50px;
+        background-color:#38487b;
+
+    }
+}

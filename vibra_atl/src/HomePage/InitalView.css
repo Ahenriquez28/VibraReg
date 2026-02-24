@@ -1,0 +1,171 @@
+.inital-view {
+  width: 100%;
+  padding-top: 80px; /* push content down slightly */
+  background-color: #38487b;
+ 
+}
+
+.logo-event-row {
+  display: flex;
+  align-items: center;  /* vertical alignment */
+  gap: 24px;            /* space between logo and pills */
+  width:100%;
+  z-index:20;
+  position: relative;
+  z-index: 10;
+}
+.FireWorks {
+  position: absolute;
+
+  width:100%;
+  height: auto;
+  z-index: 1;
+  top:0;
+  pointer-events: none; 
+}
+
+
+/* Big Container for view */
+.event-info{
+  /* width: 100%; */
+  /* margin-left: 20%; */
+  transform: translateX(70%);
+}
+.vibra-logo {
+  width: clamp(100px, 20vw, 500px);
+  transform: translateX(60%);
+}
+
+/* 3 text boxes */
+.event-details {
+  display: flex;
+  justify-items:center;
+  gap: 20px;            
+  flex-wrap: nowrap;  
+  z-index: 110 !important;
+
+}
+
+.event-details span {
+  padding: 10px 10px;
+  font-family: 'Bungee', cursive;
+  border-radius: 999px;              /* perfect pill */
+  border: 1.5px solid #ffffff;       /* vibrant red */
+  color: white;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  /* background: rgb(53, 89, 155);  */
+  backdrop-filter: blur(4px);
+  align-items: center;
+}
+
+.event-tagline-container {
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  color: white;
+  border-radius: 24px;
+  padding: 20px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  width: 600px;
+  min-width: 200px;
+  margin-top: 20px;
+
+  transform: translateX(-10%);
+  position: relative;
+  z-index: 20;
+
+  /* 🔥 Frosted glass */
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+
+.event-tagline {
+  font-size: 3.5rem;       /* big text */
+  font-weight: 800;
+  font-family: 'Bungee', cursive;
+  color: #72aabf;
+  margin-bottom: 10px;
+  text-align: center;
+  z-index: 10 !important;
+}
+
+.event-subtext {
+  font-size: 1.1rem;
+  color: white;
+  text-align: center;
+  line-height: 1.4;
+  font-weight: 400;
+}
+.register-button {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 12px 28px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  font-family: 'Bungee', cursive;
+  color: rgb(212, 20, 20);
+  /* border: 2.5px solid #72aabf !important;  */
+  background-color: #ffffff;        /* initial red */
+  border: none;
+  border-radius: 12px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  z-index: 120 !important; 
+}
+
+.register-button:hover {
+  background-color: #ff7f50;        /* changes to orange on hover */
+}
+
+
+
+
+
+
+
+
+/* City view section */
+.city-view-container {
+  position: relative;
+  /* transform: translateY(-40%); */
+  /* margin-top: 200px; */
+  width: 100%;
+  z-index: 1 !important; 
+  margin-top: -50vh;
+
+}
+
+/* Background image */
+.city-view-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  z-index: 0;
+}
+
+
+
+/* Overlay container */
+.overlay-content {
+  position: absolute;
+  left: 10%;
+  display: flex;
+  transform: translateY(-100%);
+  align-items: center;
+  gap: 16px;
+}
+
+/* Vibra text */
+.vibra-text {
+  width: clamp(100px, 40vw, 2000px);
+}
+
+/* Hackathon text */
+.hackathon-text {
+  width: clamp(100px, 40vw, 2000px);
+}

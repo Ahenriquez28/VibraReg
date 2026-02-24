@@ -1,0 +1,133 @@
+/* ===== Overall Third Block ===== */
+.Third-block {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  background-color: #38487b;
+  height: 75vh;
+}
+@media ((min-width: 1250px) and (max-width: 1800px)) {
+
+  .Third-block{
+    height: 750px !important;
+}
+}
+
+/* ==== Star is solo container === */
+.SideCity {
+  position: absolute;
+  /* left: 0; */
+  /* top: 50%; */
+  /* transform: translateY(-50%);  */
+  width: 80%; 
+  height: auto;
+
+  align-self: Start;
+  margin-top: 8%;
+  /* margin-top: 10%; */
+  z-index: 1;
+
+  pointer-events: none; /* prevents interaction issues */
+}
+
+/* ===== Location (icon + address) ===== */
+.Location {
+  display: flex;
+  align-items: center;      /* vertical alignment */
+  gap: 12px;                /* space between icon & text */
+  background-color: #192857;
+  width: 100%;
+  padding: 16px 24px;
+  box-sizing: border-box;
+  height: 10rem !important;
+  z-index: 10;
+}
+
+/* Drop point icon */
+.dropPoint {
+  width: 8rem;
+  height: auto;
+  z-index: 10;
+}
+
+/* Address text */
+.Address {
+  font-size: 3rem;
+  color: white;
+  font-weight: 500;
+  font-family: 'Bungee', cursive;
+  z-index: 10;
+}
+
+/* ===== Location View ===== */
+.Location_View {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  /* gap: 32px; */
+  transform: translateY(10%);
+  z-index: 10;
+  /* margin-left: 5%; */
+}
+
+/* Text container */
+.Address-Text {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 50%;
+  transform: translateX(10%);
+  align-items: start;
+  z-index: 10;
+  margin-left: 5%;
+}
+
+/* Title text */
+.Address-Text span:first-child {
+  font-size: 6.5rem;
+  font-weight: 700;
+  /* color: #72aabf; */
+  color: #d43f27;
+  font-family: 'Bungee', cursive;
+  z-index: 10;
+
+}
+
+/* Subtitle text */
+.Address-Text span:nth-child(2) {
+  font-size: 2.5rem;
+  font-weight: 400;
+   /* vibrant red */
+   width:60%;
+  color: white;
+  
+}
+
+/* Image on the right */
+.cmi {
+  width: 40%;
+  /* max-width: 500px; */
+  height: auto;
+  transform: translateX(-5%);
+  /* margin-right: 5%; */
+}
+
+.pdf-link{
+    background-color: #ffff;
+    border-radius: 12px;
+    font-family: 'Bungee', cursive;
+    padding: 12px 28px;
+    color: #d43f27;
+    /* margin-top: 3%; */
+    transition: background 0.3s ease;
+    cursor: pointer;
+    font-size: 1.5rem;
+    margin-top: 5%;
+}
+.pdf-link:hover{
+    color:white;
+    background-color:#d43f27 ;
+}
+
