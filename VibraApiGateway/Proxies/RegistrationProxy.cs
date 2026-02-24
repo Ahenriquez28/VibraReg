@@ -26,7 +26,6 @@ namespace VibraApiGateway.Proxies
             }
             formData.Add(new StringContent(dto.HasGroup.ToString()), "HasGroup");
 
-
             if (!string.IsNullOrEmpty(dto.GroupName))
             {
                 formData.Add(new StringContent(dto.GroupName), "GroupName"); 
@@ -35,17 +34,12 @@ namespace VibraApiGateway.Proxies
             if (dto.Resume != null)
             {
                 var fileContent = new StreamContent(dto.Resume.OpenReadStream());
-
-                // Set proper content type
                 fileContent.Headers.ContentType =
                     new MediaTypeHeaderValue(
                         string.IsNullOrEmpty(dto.Resume.ContentType) ? "application/octet-stream" : dto.Resume.ContentType
                     );
 
-                // Sanitize filename (remove quotes, spaces handled)
                 var safeFileName = Path.GetFileName(dto.Resume.FileName).Replace("\"", "");
-
-                // Create correct content-disposition header
                 var contentDisposition = new ContentDispositionHeaderValue("form-data")
                 {
                     Name = "\"Resume\"",
@@ -53,15 +47,23 @@ namespace VibraApiGateway.Proxies
                 };
 
                 fileContent.Headers.ContentDisposition = contentDisposition;
-
-                // Add to form data
                 formData.Add(fileContent, "Resume", safeFileName);
             }
 
-            
             var response = await _httpClient.PostAsync("/api/register", formData);
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<object>();
+            
+            // ✅ Better error handling - don't throw, return error details
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                return new 
+                { 
+                    success = false, 
+                    message = $"Registration failed with status {response.StatusCode}: {errorContent}" 
+                };
+            }
+            
+            return await response.Content.ReadFromJsonAsync<object>() ?? new { success = false };
         }
         public async Task<object> GetTeamsAsync(string? authToken)
         {
@@ -114,6 +116,28 @@ namespace VibraApiGateway.Proxies
             var response = await _httpClient.PostAsJsonAsync("/api/createTeam", dto);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<object>();
+        }
+
+        public async Task<object> TogglePresentAsync(object dto, string authToken)
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = 
+                new AuthenticationHeaderValue("Bearer", authToken);
+            
+            var response = await _httpClient.PostAsJsonAsync("/api/togglePresent", dto);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<object>();
+        }
+
+        public async Task<object> ConfirmAttendanceAsync(string token)
+        {
+            var response = await _httpClient.GetAsync($"/api/confirm/{token}");
+            
+            if (!response.IsSuccessStatusCode)
+            {
+                return new { success = false, message = "Failed to confirm attendance" };
+            }
+            
+            return await response.Content.ReadFromJsonAsync<object>() ?? new { success = false };
         }
     }
 }

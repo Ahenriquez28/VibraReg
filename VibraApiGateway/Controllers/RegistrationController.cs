@@ -103,5 +103,27 @@ namespace VibraApiGateway.Controllers
                 return StatusCode(500, new { message = ex.Message });
             }
         }
+
+        [HttpPost("togglePresent")]
+        public async Task<IActionResult> TogglePresent([FromBody] object dto)
+        {
+            try
+            {
+                var authToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                var result = await _registrationProxy.TogglePresentAsync(dto, authToken);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        [HttpGet("confirm/{token}")]
+        public async Task<IActionResult> ConfirmAttendance(string token)
+        {
+            var result = await _registrationProxy.ConfirmAttendanceAsync(token);
+            return Ok(result);
+        }
     }
 }

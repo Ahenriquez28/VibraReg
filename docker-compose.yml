@@ -32,6 +32,15 @@ services:
       - R2__BucketName=${R2_BUCKET_NAME}
       - R2__AccountId=${R2_ACCOUNT_ID}
       - R2__PublicUrl=${R2_PUBLIC_URL}
+
+      - Email__FromEmail=${EMAIL_FROM}
+      - Email__FromName=Vibra Hackathon
+      - Email__SmtpServer=smtp.gmail.com
+      - Email__SmtpPort=587
+      - Email__SmtpUsername=${EMAIL_USERNAME}
+      - Email__SmtpPassword=${EMAIL_PASSWORD}
+      - Email__FrontendUrl=${FRONTEND_URL}
+      - TZ=America/New_York
     ports:
       - "5001:5001"
     depends_on:
