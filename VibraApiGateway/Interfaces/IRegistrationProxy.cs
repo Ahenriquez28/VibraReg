@@ -12,6 +12,8 @@ namespace VibraApiGateway.Interfaces
         Task<object> CreateTeamAsync(object dto, string authToken);
         Task<object> TogglePresentAsync(object dto, string authToken);  // ✅ Add this
         Task<object> ConfirmAttendanceAsync(string token);
+        Task<object> GetTeamNamesAsync(); 
+        Task<object> TriggerConfirmationEmailsAsync();
   
     }
 }

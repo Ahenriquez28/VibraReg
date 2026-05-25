@@ -1,108 +1,324 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap');
 
-.Second-block{
-    background-color: #192857;
-    max-height: 85vh;
+.second-block {
+    background: #192857;
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 1s ease, transform 1s ease;
 }
-/* @media (max-height: 1000vh) {
-  .Second-block {
-    max-height: 80vh;
-  }
-} */
- 
+
+.second-block.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ============================================
+   🌆 SUBTLE GRADIENT ORBS (City Lights)
+   ============================================ */
+.gradient-bg-belong {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.gradient-orb-belong {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    animation: float-belong 25s ease-in-out infinite;
+}
+
+.orb-belong-1 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(212, 63, 39, 0.2) 0%, transparent 70%);
+    top: 10%;
+    right: 10%;
+    animation-delay: 0s;
+    opacity: 0.4;
+}
+
+.orb-belong-2 {
+    width: 450px;
+    height: 450px;
+    background: radial-gradient(circle, rgba(114, 170, 191, 0.25) 0%, transparent 70%);
+    bottom: 10%;
+    left: 10%;
+    animation-delay: 8s;
+    opacity: 0.5;
+}
+
+.orb-belong-3 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(200, 200, 220, 0.15) 0%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: 15s;
+    opacity: 0.3;
+}
+
+@keyframes float-belong {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(-40px, 40px) scale(1.1); }
+    66% { transform: translate(40px, -40px) scale(0.9); }
+}
+
+/* ============================================
+   🎊 CONFETTI
+   ============================================ */
 .confetti {
-  width: 80%;
-  height: auto;
-  display: block;
-  margin-left: 10%;
-  
+    width: 100%;
+    max-width: 1400px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+    opacity: 1;
+    mix-blend-mode: screen;
+    filter: brightness(1.1) contrast(1.05);
 }
 
+/* ============================================
+   📦 OVERLAY CONTENT - PUSHED WAY UP
+   ============================================ */
 .overlay {
-  transform: translateY(-140%);
-}
-@media ((min-width: 1451px) and (max-width: 1800px)) {
-  .overlay {
-    transform: translateY(-130%);
-  }
-  .Second-block{
-    background-color: #192857;
-    height: 650px !important;
-}
-}
-@media ((min-width: 1200px ) and (max-width: 1450px)) {
-  .overlay {
-    transform: translateY(-130%);
-  }
-  .Second-block{
-    background-color: #192857;
-    max-height: 90vh !important;
-    }
-    .Belong{
-        margin-top: 150px;
-        font-size: 10rem;
-    }
-}
-@media (max-width: 1000px) {
-  .overlay {
-    transform: translateY(-80%);
-  }
-}
-@media (max-width: 800px) {
-  .overlay {
-    transform: translateY(-40%);
-  }
-  .Reasons-Text span {
-  width: 10%;         
-  padding: 16px 20px;
-
-  color: white;
-  font-size:1rem !important;
-  border-radius: 12px;
-  text-align: start;
-}
-}
-@media (max-width: 600px) {
-  .overlay {
-    transform: translateY(-60%);
-  }
+    position: relative;
+    z-index: 3;
+    padding: 0 5%;
+    margin-top: -80vh; /* PUSHED UP MORE - was -70vh */
 }
 
-.Belong {
-    font-size: clamp(1.5rem, 8vw, 10rem);
-    margin-left: 2%;
+/* ============================================
+   💎 BELONG TITLE (Smaller - Fits One Line)
+   ============================================ */
+.belong-title {
+    font-size: clamp(2rem, 7vw, 6rem); /* SMALLER - was 10rem max */
     font-family: 'Bungee', cursive;
-    /* color: #72aabf; */
-    color: #d43f27;
-    text-shadow: 2px 2px 4px rgba(177, 42, 15, 0.3); /* x-offset, y-offset, blur, color */
+    text-align: center;
+    margin-bottom: 50px; /* Reduced from 60px */
+    position: relative;
 }
 
-
-
-  
-
-
-.Reasons-Text {
-  display: flex;
-  gap: 16px;
-  margin-top: 5%;
-  margin-left: 10%;
-  font-weight: bold;
-}
-/* .Reasons-Text span:nth-child(2) {
-    color: #d43f27; 
-} */
-
-
-.Reasons-Text span {
-  width: 30%;         
-  padding: 16px 20px;
-
-  color: white;
-  font-size:1.6rem;
-  border-radius: 12px;
-  text-align: start;
+.text-belong {
+    color: #ffffff;
+    text-shadow: 
+        0 0 20px rgba(114, 170, 191, 0.4),
+        0 4px 8px rgba(0, 0, 0, 0.5);
+    white-space: nowrap; /* Keeps it on one line */
 }
 
+/* ============================================
+   🎴 REASON CARDS (SHPE Colors)
+   ============================================ */
+.reasons-belong {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
 
+.reasons-text {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+    perspective: 1000px;
+}
 
+.reason-card {
+    position: relative;
+    padding: 40px 30px;
+    border-radius: 20px;
+    border: 2px solid rgba(114, 170, 191, 0.3);
+    
+    background: rgba(25, 40, 87, 0.6);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.4),
+        inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fade-in-card 0.8s ease-out forwards;
+    margin-bottom: 100px;
+}
+
+.card-1 {
+    animation-delay: 0.2s;
+    border-left: 4px solid #72aabf;
+}
+
+.card-2 {
+    animation-delay: 0.4s;
+    border-left: 4px solid #d43f27;
+}
+
+.card-3 {
+    animation-delay: 0.6s;
+    border-left: 4px solid #72aabf;
+}
+
+@keyframes fade-in-card {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.reason-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(114, 170, 191, 0.5);
+    background: rgba(25, 40, 87, 0.8);
+    box-shadow: 
+        0 20px 60px rgba(114, 170, 191, 0.3),
+        inset 0 1px 2px rgba(255, 255, 255, 0.2);
+}
+
+.card-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        135deg,
+        transparent 0%,
+        rgba(114, 170, 191, 0.1) 50%,
+        transparent 100%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.reason-card:hover .card-glow {
+    opacity: 1;
+}
+
+/* ============================================
+   🎯 CARD ICONS (SHPE Colors)
+   ============================================ */
+.card-icon {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 20px; /* Reduced from 25px */
+    padding: 18px;
+    background: linear-gradient(135deg, rgba(114, 170, 191, 0.2) 0%, rgba(114, 170, 191, 0.1) 100%);
+    border-radius: 16px;
+    border: 2px solid rgba(114, 170, 191, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.card-2 .card-icon {
+    background: linear-gradient(135deg, rgba(212, 63, 39, 0.2) 0%, rgba(212, 63, 39, 0.1) 100%);
+    border-color: rgba(212, 63, 39, 0.3);
+}
+
+.reason-card:hover .card-icon {
+    transform: scale(1.05);
+    border-color: rgba(114, 170, 191, 0.5);
+}
+
+.card-2:hover .card-icon {
+    border-color: rgba(212, 63, 39, 0.5);
+}
+
+.card-icon svg {
+    width: 100%;
+    height: 100%;
+    stroke: #72aabf;
+    stroke-width: 2.5;
+}
+
+.card-2 .card-icon svg {
+    stroke: #d43f27;
+}
+
+/* ============================================
+   📝 CARD TITLES & TEXT
+   ============================================ */
+.card-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    font-family: 'Bungee', cursive;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 2;
+}
+
+.reason-card p {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 1.15rem;
+    line-height: 1.85;
+    font-weight: 500;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    margin: 0;
+}
+
+/* ============================================
+   📱 RESPONSIVE
+   ============================================ */
+@media (max-width: 1200px) {
+    .overlay {
+        margin-top: -70vh;
+    }
+    
+    .belong-title {
+        font-size: clamp(1.8rem, 6vw, 5rem);
+    }
+}
+
+@media (max-width: 768px) {
+    .overlay {
+        margin-top: -60vh;
+    }
+    
+    .belong-title {
+        font-size: clamp(1.5rem, 5vw, 4rem);
+    }
+    
+    .reasons-text {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .reason-card {
+        padding: 30px 20px;
+    }
+    
+    .reason-card p {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .overlay {
+        margin-top: -50vh;
+    }
+    
+    .card-icon {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 15px;
+    }
+}

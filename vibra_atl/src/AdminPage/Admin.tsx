@@ -3,32 +3,28 @@ import { useNavigate } from 'react-router-dom';
 import './Admin.css';
 import type { Team, Student, TeamChange } from '../models/AdminTypes';
 
-// const API_URL = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : 'http://localhost:5001/api';
 const API_URL = import.meta.env.VITE_API_URL;
-
 const MAX_TEAM_SIZE = 4;
 
 function Admin() {
   const navigate = useNavigate();
   const username = localStorage.getItem('username');
   const [teams, setTeams] = useState<Team[]>([]);
-  const [mode, setMode] = useState<'view' | 'edit'>('view');
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
   const [draggedStudent, setDraggedStudent] = useState<Student & { sourceTeamId: number } | null>(null);
-  const [changes, setChanges] = useState<TeamChange[]>([]);
   const [showAddTeam, setShowAddTeam] = useState(false);
   const [newTeamName, setNewTeamName] = useState('');
 
-
   useEffect(() => {
-  fetchTeams(); // Initial fetch only
+    fetchTeams(true); // Initial fetch WITH loading indicator
 
-  const intervalId = setInterval(() => {
-    fetchTeams();
-  }, 5000);
+    const intervalId = setInterval(() => {
+      fetchTeams(false);  // Background refresh WITHOUT loading indicator
+    }, 10000);
+    
     return () => clearInterval(intervalId);
-  }, []); 
+  }, []);
 
   const getAuthHeaders = () => {
     const token = localStorage.getItem('authToken');
@@ -43,11 +39,13 @@ function Admin() {
     navigate('/login');
   };
 
-  const fetchTeams = async () => {
+  const fetchTeams = async (showLoading = true) => {
     try {
-      setLoading(true);
+      if (showLoading) setLoading(true);
+      else setIsSyncing(true);
+      
       const token = localStorage.getItem('authToken');
-      const response = await fetch(`${API_URL}/getTeams?t=${Date.now()}`, {  // ✅ Add cache buster
+      const response = await fetch(`${API_URL}/getTeams?t=${Date.now()}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -62,9 +60,10 @@ function Admin() {
       if (data.success) setTeams(data.teams);
     } catch (error) {
       console.error('Failed to fetch teams:', error);
-      alert('Failed to load teams');
+      if (showLoading) alert('Failed to load teams');
     } finally {
-      setLoading(false);
+      if (showLoading) setLoading(false);
+      else setIsSyncing(false);
     }
   };
 
@@ -105,14 +104,13 @@ function Admin() {
   };
 
   const handleDragStart = (e: React.DragEvent, student: Student, sourceTeamId: number) => {
-    if (mode !== 'edit') return;
     setDraggedStudent({ ...student, sourceTeamId });
     e.dataTransfer.effectAllowed = 'move';
   };
 
-  const handleDrop = (e: React.DragEvent, targetTeamId: number) => {
+  const handleDrop = async (e: React.DragEvent, targetTeamId: number) => {
     e.preventDefault();
-    if (mode !== 'edit' || !draggedStudent) return;
+    if (!draggedStudent) return;
 
     const { sourceTeamId, ...student } = draggedStudent;
     if (sourceTeamId === targetTeamId) {
@@ -127,6 +125,7 @@ function Admin() {
       return;
     }
 
+    // Optimistically update UI
     setTeams(teams.map(team => {
       if (team.teamId === sourceTeamId) {
         return { ...team, students: team.students.filter(s => s.id !== student.id) };
@@ -137,12 +136,36 @@ function Admin() {
       return team;
     }));
 
-    setChanges(prev => [
-      ...prev.filter(c => c.studentId !== student.id),
-      { studentId: student.id, teamId: targetTeamId === 404 ? null : targetTeamId }
-    ]);
-
     setDraggedStudent(null);
+
+    // Auto-save to backend
+    try {
+      const response = await fetch(`${API_URL}/updateTeams`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ 
+          assignments: [{ 
+            studentId: student.id, 
+            teamId: targetTeamId === 404 ? null : targetTeamId 
+          }] 
+        })
+      });
+
+      if (response.status === 401) {
+        handleLogout();
+        return;
+      }
+
+      const data = await response.json();
+      if (!data.success) {
+        alert('Failed to save team change: ' + data.message);
+        await fetchTeams(false); // Revert by fetching fresh data
+      }
+    } catch (error) {
+      console.error('Failed to save team change:', error);
+      alert('Failed to save team change');
+      await fetchTeams(false); // Revert by fetching fresh data
+    }
   };
 
   const handleDeleteStudent = async (student: Student, teamId: number) => {
@@ -167,7 +190,7 @@ function Admin() {
       const data = await response.json();
       if (data.success) {
         alert('Student deleted successfully!');
-        await fetchTeams();
+        await fetchTeams(false);
       } else {
         alert('Failed to delete student: ' + data.message);
       }
@@ -200,7 +223,7 @@ function Admin() {
         alert('Team created successfully!');
         setNewTeamName('');
         setShowAddTeam(false);
-        await fetchTeams();
+        await fetchTeams(false);
       } else {
         alert('Failed to create team: ' + data.message);
       }
@@ -240,7 +263,7 @@ function Admin() {
       const data = await response.json();
       if (data.success) {
         alert('Team deleted successfully!');
-        await fetchTeams();
+        await fetchTeams(false);
       } else {
         alert('Failed to delete team: ' + data.message);
       }
@@ -250,48 +273,6 @@ function Admin() {
     }
   };
 
-  const handleSave = async () => {
-    if (changes.length === 0) {
-      alert('No changes to save');
-      return;
-    }
-
-    try {
-      setSaving(true);
-      const response = await fetch(`${API_URL}/updateTeams`, {
-        method: 'POST',
-        headers: getAuthHeaders(),
-        body: JSON.stringify({ assignments: changes })
-      });
-
-      if (response.status === 401) {
-        handleLogout();
-        return;
-      }
-
-      const data = await response.json();
-      if (data.success) {
-        alert('Teams updated successfully!');
-        setChanges([]);
-        setMode('view');
-        await fetchTeams();
-      } else {
-        alert('Failed to save changes: ' + data.message);
-      }
-    } catch (error) {
-      console.error('Failed to save:', error);
-      alert('Failed to save changes');
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const handleCancel = () => {
-    setMode('view');
-    setChanges([]);
-    fetchTeams();
-  };
-
   if (loading) {
     return (
       <div className="admin-container">
@@ -299,6 +280,7 @@ function Admin() {
       </div>
     );
   }
+  const totalAttendees = teams.reduce((total, team) => total + team.students.length, 0);
 
   return (
     <div className="admin-container">
@@ -306,59 +288,32 @@ function Admin() {
       <header className="admin-header">
         <div>
           <h1>Team Management Admin Panel</h1>
+          <div style={{ fontSize: '16px', color: '#72aabf', marginTop: '5px' }}>
+            <strong>Total Attendees:</strong> {totalAttendees}
+          </div>
+          {isSyncing && <span style={{color: '#72aabf', fontSize: '12px', marginLeft: '10px'}}>● Syncing...</span>}
           <span className="logged-in-as">Logged in as: {username}</span>
         </div>
         <div className="admin-controls">
-          {mode === 'view' ? (
-            <>
-              <button className="btn btn-primary" onClick={() => setMode('edit')}>
-                Switch to Edit Mode
-              </button>
-              <button 
-                className="btn btn-secondary" 
-                onClick={fetchTeams} 
-                style={{ marginLeft: '10px' }}
-              >
-                🔄 Refresh
-              </button>
-              <button className="btn btn-secondary" onClick={handleLogout} style={{ marginLeft: '10px' }}>
-                Logout
-              </button>
-            </>
-          ) : (
-            <div className="edit-controls">
-              <span className="changes-indicator">
-                {changes.length} change{changes.length !== 1 ? 's' : ''}
-              </span>
-              <button 
-                className="btn btn-success"
-                onClick={handleSave}
-                disabled={saving || changes.length === 0}
-              >
-                {saving ? 'Saving...' : 'Save Changes'}
-              </button>
-              <button className="btn btn-secondary" onClick={handleCancel} disabled={saving}>
-                Cancel
-              </button>
-              <button
-                className="btn btn-primary"
-                onClick={() => setShowAddTeam(true)}
-                style={{ marginLeft: '10px' }}
-              >
-                + Add Team
-              </button>
-            </div>
-          )}
+          <button 
+            className="btn btn-secondary" 
+            onClick={() => fetchTeams(true)} 
+            style={{ marginLeft: '10px' }}
+          >
+            🔄 Refresh
+          </button>
+          <button
+            className="btn btn-primary"
+            onClick={() => setShowAddTeam(true)}
+            style={{ marginLeft: '10px' }}
+          >
+            + Add Team
+          </button>
+          <button className="btn btn-secondary" onClick={handleLogout} style={{ marginLeft: '10px' }}>
+            Logout
+          </button>
         </div>
       </header>
-
-      {/* Edit instructions */}
-      {mode === 'edit' && (
-        <div className="edit-instructions">
-          <strong>Edit Mode:</strong> Drag and drop students between teams to reorganize. 
-          Click Save Changes when done.
-        </div>
-      )}
 
       {/* Add Team Modal */}
       {showAddTeam && (
@@ -398,9 +353,8 @@ function Admin() {
           <TeamCard
             key={team.teamId}
             team={team}
-            mode={mode}
             onDragStart={handleDragStart}
-            onDragOver={(e) => { if (mode === 'edit') e.preventDefault(); }}
+            onDragOver={(e) => e.preventDefault()}
             onDrop={handleDrop}
             onDeleteTeam={handleDeleteTeam}
             onDeleteStudent={handleDeleteStudent}
@@ -414,7 +368,6 @@ function Admin() {
 
 interface TeamCardProps {
   team: Team;
-  mode: 'view' | 'edit';
   onDragStart: (e: React.DragEvent, student: Student, teamId: number) => void;
   onDragOver: (e: React.DragEvent) => void;
   onDrop: (e: React.DragEvent, teamId: number) => void;
@@ -423,7 +376,7 @@ interface TeamCardProps {
   onTogglePresent: (studentId: number, currentStatus: boolean) => void;
 }
 
-function TeamCard({ team, mode, onDragStart, onDragOver, onDrop, onDeleteTeam, onDeleteStudent, onTogglePresent }: TeamCardProps) {
+function TeamCard({ team, onDragStart, onDragOver, onDrop, onDeleteTeam, onDeleteStudent, onTogglePresent }: TeamCardProps) {
   const isUnassigned = team.teamId === 404;
 
   return (
@@ -459,7 +412,6 @@ function TeamCard({ team, mode, onDragStart, onDragOver, onDrop, onDeleteTeam, o
               key={student.id}
               student={student}
               teamId={team.teamId}
-              mode={mode}
               onDragStart={onDragStart}
               onDeleteStudent={onDeleteStudent}
               onTogglePresent={onTogglePresent}
@@ -474,17 +426,16 @@ function TeamCard({ team, mode, onDragStart, onDragOver, onDrop, onDeleteTeam, o
 interface StudentCardProps {
   student: Student;
   teamId: number;
-  mode: 'view' | 'edit';
   onDragStart: (e: React.DragEvent, student: Student, teamId: number) => void;
   onDeleteStudent: (student: Student, teamId: number) => void;
   onTogglePresent: (studentId: number, currentStatus: boolean) => void;
 }
 
-function StudentCard({ student, teamId, mode, onDragStart, onDeleteStudent, onTogglePresent }: StudentCardProps) {
+function StudentCard({ student, teamId, onDragStart, onDeleteStudent, onTogglePresent }: StudentCardProps) {
   return (
     <div
       className="student-card"
-      draggable={mode === 'edit'}
+      draggable={true}
       onDragStart={(e) => onDragStart(e, student, teamId)}
     >
       <div className="student-info">
@@ -499,28 +450,17 @@ function StudentCard({ student, teamId, mode, onDragStart, onDeleteStudent, onTo
         </div>
         <div>
           {student.resumePath && (
-          <a
-            href={student.resumePath}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="resume-link"
-            onClick={(e) => e.stopPropagation()}
-          >
-            View Resume
-          </a>
-        )}
+            <a
+              href={student.resumePath}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="resume-link"
+              onClick={(e) => e.stopPropagation()}
+            >
+              View Resume
+            </a>
+          )}
         </div>
-        {/* {student.resumePath && (
-          <a
-            href={student.resumePath}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="resume-link"
-            onClick={(e) => e.stopPropagation()}
-          >
-            View Resume
-          </a>
-        )} */}
       </div>
       <button
         className={`attendance-btn ${student.isPresent ? 'present' : 'absent'}`}
@@ -542,7 +482,7 @@ function StudentCard({ student, teamId, mode, onDragStart, onDeleteStudent, onTo
       >
         ×
       </button>
-      {mode === 'edit' && <div className="drag-indicator">::</div>}
+      <div className="drag-indicator">::</div>
     </div>
   );
 }

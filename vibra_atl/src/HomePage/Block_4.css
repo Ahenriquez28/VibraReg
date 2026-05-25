@@ -1,75 +1,257 @@
-.Fourth-Block{
-    width:100%;
-    background-color:#38487b;
+/* ============================================
+   🏢 SPONSORS BLOCK - CITY THEME
+   ============================================ */
+.fourth-block {
+    width: 100%;
+    min-height: 100vh;
+    background: #38487b;
+    position: relative;
+    overflow: hidden;
+    padding: 80px 0 100px;
     display: flex;
     flex-direction: column;
-    /* height: 100vh; */
+    align-items: center;
+}
+
+/* ============================================
+   📐 ABSTRACT BACKGROUND SHAPES
+   ============================================ */
+.sponsor-shapes {
     position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 1;
 }
 
-/*== Images of Sponsors Logo ++++*/
-.SponsorsTextImage {
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* THIS centers the image */
+.sponsor-shape {
+    position: absolute;
+    opacity: 0.1;
+    border: 3px solid;
 }
 
-.Sponsors-Text{
+.shape-1 {
+    width: 300px;
+    height: 300px;
+    border-color: #72aabf;
+    top: 15%;
+    left: 10%;
+    transform: rotate(25deg);
+}
+
+.shape-2 {
+    width: 250px;
+    height: 250px;
+    border-color: #d43f27;
+    bottom: 20%;
+    right: 15%;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+/* ============================================
+   📦 SPONSORS CONTAINER
+   ============================================ */
+.sponsors-container {
+    position: relative;
+    z-index: 10;
+    max-width: 1400px;
+    width: 100%;
+    padding: 0 5%;
+}
+
+/* ============================================
+   📝 HEADER SECTION
+   ============================================ */
+.sponsors-header {
     text-align: center;
-    margin-top:5%;
-    font-size: 2rem;
-    font-family: 'Bungee', cursive;
-    color: white;
-    z-index: 10;
-    background-color: #d43f27;
-    padding: 2%;
-    border-radius: 10px;
-
+    margin-bottom: 60px;
 }
-.NcrVoyix{
-    /* justify-content: center !important;
-    flex-direction: column !important; */
-    align-items: center !important;
-    width:40%;
+
+.sponsors-title {
+    font-family: 'Bungee', cursive;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    color: #72aabf;
+    margin: 0 0 20px 0;
+    text-shadow: 
+        3px 3px 0px rgba(0, 0, 0, 0.3),
+        0 0 20px rgba(114, 170, 191, 0.3);
+}
+
+.sponsors-subtitle {
+    font-size: clamp(1.1rem, 2vw, 1.8rem);
+    color: #ffffff;
+    font-weight: 500;
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* ============================================
+   🏢 SPONSORS GRID
+   ============================================ */
+.sponsors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 40px;
+    margin-bottom: 60px;
+    padding: 0 20px;
+}
+
+.sponsor-card {
+    position: relative;
+    background: rgba(25, 40, 87, 0.6);
+    border: 2px solid rgba(114, 170, 191, 0.3);
+    border-radius: 16px;
+    padding: 40px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.4),
+        inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.sponsor-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(114, 170, 191, 0.5);
+    box-shadow: 
+        0 15px 45px rgba(114, 170, 191, 0.3),
+        inset 0 1px 2px rgba(255, 255, 255, 0.15);
+}
+
+.sponsor-logo {
+    width: 100%;
+    max-width: 280px;
     height: auto;
-    z-index: 10;
-}   
-.Sponsor-link{
-    /* width:40%; */
-    align-self: center;
-    transition: background 0.3s ease;
-    cursor: pointer;
-    font-size: 1.5rem;
-    background-color: #72aabf;
-    border-radius: 12px;
+    object-fit: contain;
+    filter: brightness(1.1);
+    transition: transform 0.3s ease;
+}
+
+.sponsor-card:hover .sponsor-logo {
+    transform: scale(1.05);
+}
+
+/* ============================================
+   🔥 CTA BUTTON
+   ============================================ */
+.sponsor-cta {
+    display: inline-flex;
+    align-items: center !important;
+    gap: 12px;
+    padding: 18px 40px;
+    font-size: clamp(1.1rem, 1.5vw, 1.5rem);
+    font-weight: 700;
     font-family: 'Bungee', cursive;
-    padding: 12px 28px;
-    color: white;
-    z-index: 10;
-}
-.Sponsor-link:hover{
-    color:#72aabf;
-    background-color: white ;
-
-}
-
-.CornerBuilding {
-  /* position: absolute; */
-  align-self: end;
-  margin-top: -20%;
-  z-index: 0;
-  /* right: 0; */
-  width: 50%;
-  /* margin-top: auto; */
-  /* width: 2%;    */
-
-  height: auto;
+    color: #ffffff;
+    background: #d43f27;
+    border: 3px solid #ffffff;
+    border-radius: 8px;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 
+        5px 5px 0px rgba(0, 0, 0, 0.3),
+        0 8px 24px rgba(212, 63, 39, 0.4);
+    margin: 0 auto;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
-@media ((min-width: 1200px ) and (max-width: 1450px)){
-    .Fourth-Block{
-        padding-top: 50px;
-        background-color:#38487b;
+.sponsor-cta:hover {
+    transform: translateY(-3px);
+    background: #72aabf;
+    border-color: #72aabf;
+    box-shadow: 
+        7px 7px 0px rgba(0, 0, 0, 0.4),
+        0 12px 32px rgba(114, 170, 191, 0.5);
+}
 
+.arrow-icon {
+    width: 24px;
+    height: 24px;
+    stroke: white;
+    stroke-width: 3;
+    transition: transform 0.3s ease;
+}
+
+.sponsor-cta:hover .arrow-icon {
+    transform: translateX(5px);
+}
+
+/* ============================================
+   🏙️ CORNER BUILDING
+   ============================================ */
+.corner-building {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 45%;
+    max-width: 600px;
+    height: auto;
+    z-index: 2;
+    opacity: 0.4;
+    mix-blend-mode: overlay;
+    filter: contrast(1.1);
+    pointer-events: none;
+}
+
+/* ============================================
+   📱 RESPONSIVE
+   ============================================ */
+@media (max-width: 1200px) {
+    .sponsors-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+    }
+    
+    .corner-building {
+        width: 50%;
+    }
+}
+
+@media (max-width: 768px) {
+    .fourth-block {
+        padding: 60px 0 80px;
+    }
+    
+    .sponsors-header {
+        margin-bottom: 40px;
+    }
+    
+    .sponsors-grid {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+    
+    .sponsor-card {
+        padding: 30px 20px;
+        min-height: 150px;
+    }
+    
+    .sponsor-cta {
+        padding: 15px 30px;
+        font-size: 1.1rem;
+    }
+    
+    .corner-building {
+        width: 60%;
+        opacity: 0.3;
+    }
+}
+
+@media (max-width: 480px) {
+    .sponsor-cta {
+        width: 90%;
+        justify-content: center;
     }
 }

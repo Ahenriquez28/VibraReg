@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using RegistrationService.Data;
+using RegistrationService.DTOs;
 
 namespace RegistrationService.Services
 {
@@ -11,17 +12,19 @@ namespace RegistrationService.Services
             using var scope = serviceProvider.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<RegistrationDbContext>();
             var emailService = scope.ServiceProvider.GetRequiredService<IEmailService>();
+
+            var allStudents = await context.RegisteredUsers.ToListAsync();
+            var unconfirmedStudents = allStudents.Where(s => s.Status == "registered"); 
             
-            var students = await context.RegisteredUsers
-                .Where(s => s.Status == "registered" 
-                         && s.ConfirmationSentAt == null)
-                .ToListAsync();
+            var registrationService = scope.ServiceProvider.GetRequiredService<IRegistrationService>();
+            var allTeams = await registrationService.GetTeams();
             
-            foreach (var student in students)
+            
+            foreach (var student in unconfirmedStudents)
             {
                 try
                 {
-                    await emailService.SendConfirmationEmailAsync(
+                    await emailService.SendDeadlineReminderAsync(
                         student.Email,
                         student.FullName,
                         student.ConfirmationToken ?? ""
@@ -33,8 +36,9 @@ namespace RegistrationService.Services
                 {
                     Console.WriteLine($"Failed to send to {student.Email}: {ex.Message}");
                 }
-            }
+                await Task.Delay(2000); // respect Resend 2 req/sec limit
             
+            }
             await context.SaveChangesAsync();
         }
 
@@ -62,6 +66,7 @@ namespace RegistrationService.Services
                 {
                     Console.WriteLine($"Failed to send to {student.Email}: {ex.Message}");
                 }
+                await Task.Delay(2000); // respect Resend 2 req/sec limit
             }
         }
 

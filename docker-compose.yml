@@ -40,6 +40,7 @@ services:
       - Email__SmtpUsername=${EMAIL_USERNAME}
       - Email__SmtpPassword=${EMAIL_PASSWORD}
       - Email__FrontendUrl=${FRONTEND_URL}
+      - Email__ResendApiKey=${EMAIL_RESEND_API_KEY}
       - TZ=America/New_York
     ports:
       - "5001:5001"
@@ -84,10 +85,17 @@ services:
       - vibra_network
 
   frontend:
-    build: ./vibra_atl
+    build:
+      context: ./vibra_atl
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: https://vibraatl.com/api
     container_name: vibra_frontend
     ports:
       - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
     depends_on:
       - api-gateway
     networks:

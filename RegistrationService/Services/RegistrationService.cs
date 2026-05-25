@@ -15,17 +15,20 @@ namespace RegistrationService.Services
         private readonly IAmazonS3 _s3Client;
         private readonly string _bucketName;
         private readonly string _publicUrl;
+        private readonly IEmailService _emailService;
 
         public RegistrationService(
             RegistrationDbContext dbContext,
             IConfiguration configuration,
-            IAmazonS3 s3Client)
+            IAmazonS3 s3Client,
+            IEmailService emailService)
         {
             _dbContext = dbContext;
             _configuration = configuration;
             _s3Client = s3Client;
             _bucketName = configuration["R2:BucketName"] ?? throw new InvalidOperationException("R2 bucket name not configured");
             _publicUrl = configuration["R2:PublicUrl"] ?? throw new InvalidOperationException("R2 public URL not configured");
+            _emailService = emailService;
         }
 
         // Helper method to ensure TeamId 404 exists
@@ -55,13 +58,19 @@ namespace RegistrationService.Services
         }
 
         public async Task<RegisteredUser> RegisterAsync(RegisterDTO dto)
+    {
+        using var transaction = await _dbContext.Database.BeginTransactionAsync();
+        
+        try
         {
+            // Check for duplicate email
             var existingUser = await _dbContext.RegisteredUsers
                 .FirstOrDefaultAsync(u => u.Email == dto.Email);
 
             if (existingUser != null)
-                throw new InvalidOperationException("Email already registered");
+                throw new InvalidOperationException("This email is already registered.");
 
+            // Check team logic before doing anything else
             if (dto.HasGroup)
             {
                 var team = await _dbContext.RegisteredTeams
@@ -70,7 +79,7 @@ namespace RegistrationService.Services
                 if (team != null)
                 {
                     if (team.TeamFull)
-                        throw new InvalidOperationException("Team is already full");
+                        throw new InvalidOperationException("This team is already full.");
 
                     var currentIds = string.IsNullOrEmpty(team.Id)
                         ? Array.Empty<string>()
@@ -80,38 +89,39 @@ namespace RegistrationService.Services
                     {
                         team.TeamFull = true;
                         _dbContext.RegisteredTeams.Update(team);
-                        throw new InvalidOperationException("Team is already full (max 4 members)");
+                        await _dbContext.SaveChangesAsync();
+                        throw new InvalidOperationException("This team is already full (max 4 members).");
                     }
                 }
             }
-            
-            //We are saving resume to CloudFlare R3 bucket, we then get public url of Resume saved there
+
+            // Save resume to Cloudflare R2 bucket
             string? resumePath = null;
             if (dto.Resume != null)
             {
                 resumePath = await SaveResumeAsync(dto.Resume);
             }
 
+            // Create the user
             var registration = new RegisteredUser
             {
                 FullName = dto.FullName,
                 Email = dto.Email,
                 School = dto.School,
-                Gpa = string.IsNullOrWhiteSpace(dto.Gpa) ? "Not Provided" : dto.Gpa, 
+                Gpa = string.IsNullOrWhiteSpace(dto.Gpa) ? "Not Provided" : dto.Gpa,
                 HasGroup = dto.HasGroup,
                 GroupName = dto.GroupName,
                 ResumePath = resumePath,
-
-                //For future confirmation if theyre coming or not 
                 Status = "registered",
                 CreatedAt = DateTime.UtcNow,
                 ConfirmationToken = Guid.NewGuid().ToString(),
-                ConfirmationDeadline = new DateTime(2026, 4, 1, 17, 0, 0, DateTimeKind.Local)  // April 1st, 2026 at 5pm Local
+                ConfirmationDeadline = new DateTime(2026, 4, 1, 17, 0, 0, DateTimeKind.Local)
             };
 
             _dbContext.RegisteredUsers.Add(registration);
             await _dbContext.SaveChangesAsync();
 
+            // Handle team assignment
             if (dto.HasGroup)
             {
                 var team = await _dbContext.RegisteredTeams
@@ -119,6 +129,7 @@ namespace RegistrationService.Services
 
                 if (team == null)
                 {
+                    // Team doesnt exist yet — create it
                     team = new RegisteredTeams
                     {
                         GroupName = dto.GroupName!,
@@ -145,11 +156,12 @@ namespace RegistrationService.Services
                 registration.TeamId = team.TeamId;
                 _dbContext.RegisteredUsers.Update(registration);
                 await _dbContext.SaveChangesAsync();
-                
+
                 Console.WriteLine($"Student {registration.Id} assigned to team {team.TeamId} ({team.GroupName})");
             }
             else
             {
+                // No team — assign to the unassigned pool
                 var noTeamOption = await EnsureUnassignedTeamExists();
 
                 var studentId = registration.Id.ToString();
@@ -166,10 +178,46 @@ namespace RegistrationService.Services
 
                 await _dbContext.SaveChangesAsync();
             }
-          
+
+            // Commit everything — only hits this line if nothing above threw
+            await transaction.CommitAsync();
+
             Console.WriteLine("Registration complete");
+
+            // Send confirmation email
+            if (dto.HasGroup && !string.IsNullOrEmpty(dto.GroupName))
+            {
+                await _emailService.SendRegistrationEmailWithTeam(
+                    registration.Email,
+                    registration.FullName,
+                    dto.GroupName
+                );
+            }
+            else
+            {
+                await _emailService.SendRegistrationEmailNoTeam(
+                    registration.Email,
+                    registration.FullName
+                );
+            }
+
             return registration;
         }
+        catch (InvalidOperationException)
+        {
+            // User error — roll back any partial saves and re-throw
+            // The controller will catch this and return 400
+            await transaction.RollbackAsync();
+            throw;
+        }
+        catch (Exception ex)
+        {
+            // Unexpected server error — roll back and re-throw
+            await transaction.RollbackAsync();
+            Console.WriteLine($"Registration failed unexpectedly: {ex.Message}");
+            throw;
+        }
+    }
 
         public async Task<string> SaveResumeAsync(IFormFile file)
         {
@@ -442,6 +490,15 @@ namespace RegistrationService.Services
             await _dbContext.SaveChangesAsync();
 
             return;
+        }
+
+        public async Task<List<string>> GetTeamNamesAsync()
+        {
+            return await _dbContext.RegisteredTeams
+                .Where(t => t.TeamId != 404)        // exclude unassigned
+                .Where(t => t.TeamFull == false)    // only show teams with space
+                .Select(t => t.GroupName)           
+                .ToListAsync();
         }
     }
 }

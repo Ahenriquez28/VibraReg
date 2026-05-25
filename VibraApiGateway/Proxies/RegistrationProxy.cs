@@ -1,16 +1,20 @@
 using VibraApiGateway.DTOs;
 using VibraApiGateway.Interfaces;
 using System.Net.Http.Headers;
+using System.Text.Json;
 
 namespace VibraApiGateway.Proxies
 {
     public class RegistrationProxy : IRegistrationProxy
     {
         private readonly HttpClient _httpClient;
+        private readonly string _registrationServiceUrl;
         
-        public RegistrationProxy(HttpClient httpClient)
+        public RegistrationProxy(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
+            _registrationServiceUrl = configuration["Services:RegistrationService"] 
+                ?? "http://registration-service:5001";
         }
         
         public async Task<object> RegisterAsync(RegisterDTO dto)
@@ -52,7 +56,6 @@ namespace VibraApiGateway.Proxies
 
             var response = await _httpClient.PostAsync("/api/register", formData);
             
-            // ✅ Better error handling - don't throw, return error details
             if (!response.IsSuccessStatusCode)
             {
                 var errorContent = await response.Content.ReadAsStringAsync();
@@ -65,6 +68,7 @@ namespace VibraApiGateway.Proxies
             
             return await response.Content.ReadFromJsonAsync<object>() ?? new { success = false };
         }
+
         public async Task<object> GetTeamsAsync(string? authToken)
         {
             if (!string.IsNullOrEmpty(authToken))
@@ -135,6 +139,39 @@ namespace VibraApiGateway.Proxies
             if (!response.IsSuccessStatusCode)
             {
                 return new { success = false, message = "Failed to confirm attendance" };
+            }
+            
+            return await response.Content.ReadFromJsonAsync<object>() ?? new { success = false };
+        }
+
+        public async Task<object> GetTeamNamesAsync()
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"{_registrationServiceUrl}/api/team-names");
+                var content = await response.Content.ReadAsStringAsync();
+                
+                if (!response.IsSuccessStatusCode)
+                {
+                    return new { success = false, message = "Failed to fetch team names" };
+                }
+                
+                return JsonSerializer.Deserialize<object>(content) ?? new { success = false };
+            }
+            catch (Exception ex)
+            {
+                return new { success = false, message = ex.Message };
+            }
+        }
+
+        public async Task<object> TriggerConfirmationEmailsAsync()
+        {
+            
+            var response = await _httpClient.PostAsync("/api/trigger-confirmation-emails", null);
+            
+            if (!response.IsSuccessStatusCode)
+            {
+                return new { success = false, message = "Failed to trigger confirmation emails" };
             }
             
             return await response.Content.ReadFromJsonAsync<object>() ?? new { success = false };

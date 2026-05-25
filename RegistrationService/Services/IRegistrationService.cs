@@ -12,6 +12,7 @@ namespace RegistrationService.Services
         Task RemoveStudents(UpdateTeamsDTO dto);
         Task RemoveTeam(RegisteredTeams badTeam);
         Task CreateTeam(RegisteredTeams newTeam);
+        Task<List<string>> GetTeamNamesAsync();
 
     }
 }

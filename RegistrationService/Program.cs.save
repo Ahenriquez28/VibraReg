@@ -53,25 +53,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 // ===== CORS =====
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(policy =>
-    {
-        policy.WithOrigins(
-                "http://localhost",
-                "http://localhost:80",
-                "http://localhost:5173",
-                "http://vibra_atl",
-                "http://frontend",
-                "http://165.245.130.1",
-                "http://vibraatl.com",
-                "https://vibraatl.com"
-              )
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials();
-    });
-});
+
 // ===== Cloudflare R2 =====
 builder.Services.AddSingleton<IAmazonS3>(sp =>
 {
@@ -110,24 +92,20 @@ using (var scope = app.Services.CreateScope())
 
 var serviceProvider = app.Services;
 
-
-// March 30, 2026 at 9:00 AM
 RecurringJob.AddOrUpdate(
-    "send-confirmation-emails-march30",
+    "send-confirmation-emails",
     () => ScheduledJobs.SendConfirmationEmailsJob(serviceProvider),
-    "0 9 30 3 *");  // 9:00 AM on March 30th
-
-// April 1, 2026 at 9:00 AM
-RecurringJob.AddOrUpdate(
-    "send-confirmation-emails-april1",
-    () => ScheduledJobs.SendConfirmationEmailsJob(serviceProvider),
-    "0 9 1 4 *");  // 9:00 AM on April 1st
+    "0 17 30 3 *");  // March 23rd at 10 AM
 
 RecurringJob.AddOrUpdate(
     "send-deadline-reminders",
     () => ScheduledJobs.SendDeadlineRemindersJob(serviceProvider),
-    "0 14 1 4 *");   // April 1st at 2 PM
+    "0 10 1 4 *");   // April 1st at 10 AM
 
+RecurringJob.AddOrUpdate(
+    "cleanup-unconfirmed",
+    () => ScheduledJobs.CleanupUnconfirmedJob(serviceProvider),
+    "0 18 1 4 *");   // April 1st at 6 PM
 
 
 app.Run("http://0.0.0.0:5001");

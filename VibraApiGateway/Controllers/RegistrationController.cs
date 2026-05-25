@@ -125,5 +125,33 @@ namespace VibraApiGateway.Controllers
             var result = await _registrationProxy.ConfirmAttendanceAsync(token);
             return Ok(result);
         }
+
+        [HttpGet("team-names")]
+        public async Task<IActionResult> GetTeamNames()
+        {
+            try
+            {
+                var result = await _registrationProxy.GetTeamNamesAsync();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost("trigger-confirmation-emails")]
+        public async Task<IActionResult> TriggerConfirmationEmails()
+        {
+            try
+            {
+                var result = await _registrationProxy.TriggerConfirmationEmailsAsync();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = ex.Message });
+            }
+        }
     }
 }

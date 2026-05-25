@@ -61,8 +61,8 @@ function ConfirmAttendance() {
             <div className="info-box">
               <h3>📅 Event Details:</h3>
               <ul>
-                <li><strong>Date:</strong> April 5th, 2026</li>
-                <li><strong>Time:</strong> 9:00 AM - 6:00 PM</li>
+                <li><strong>Date:</strong> April 4th, 2026</li>
+                <li><strong>Time:</strong> 12:00PM</li>
                 <li><strong>Location:</strong> Georgia State University</li>
               </ul>
             </div>
@@ -102,8 +102,8 @@ function ConfirmAttendance() {
               <p>You previously confirmed your attendance. See you at the event!</p>
               <h3>📅 Event Details:</h3>
               <ul>
-                <li><strong>Date:</strong> April 5th, 2026</li>
-                <li><strong>Time:</strong> 9:00 AM - 6:00 PM</li>
+                <li><strong>Date:</strong> April 4th, 2026</li>
+                <li><strong>Time:</strong> 12:00PM</li>
                 <li><strong>Location:</strong> Georgia State University</li>
               </ul>
             </div>

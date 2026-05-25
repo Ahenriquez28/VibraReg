@@ -37,11 +37,7 @@ namespace RegistrationService.Controllers
             // Get authenticated user info from JWT token
             var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
             var username = User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value;
-            var totalStudents = await _dbContext.RegisteredUsers.CountAsync();
-            if (totalStudents >= 150)
-            {
-                throw new InvalidOperationException("Registration is full. Maximum 150 students allowed.");
-            }
+            
             
             try
             {
@@ -50,6 +46,15 @@ namespace RegistrationService.Controllers
                 // {
                 //     var relativePath = await _registrationService.SaveResumeAsync(dto.Resume);
                 // }
+                var totalStudents = await _dbContext.RegisteredUsers.CountAsync();
+                if (totalStudents >= 200)
+                {
+                    return BadRequest(new
+                    {
+                        success = false,
+                        message = "Registration is full. We have reached our maximum capacity."
+                    });
+                }
 
                 var result = await _registrationService.RegisterAsync(dto);
                 return Ok(new
@@ -61,19 +66,24 @@ namespace RegistrationService.Controllers
                 });
             }
 
+            catch (InvalidOperationException ex)
+            {
+                // These are user errors — duplicate email, full team, etc.
+                return BadRequest(new
+                {
+                    success = false,
+                    message = ex.Message  // This is the clean message you wrote in the service
+                });
+            }
             catch (Exception ex)
             {
-                //Status 500 means error in our loginc
+                // These are real server errors
                 return StatusCode(500, new
                 {
                     success = false,
-                    message = "Registration failed",
-                    exceptionMessage = ex.Message,
-                    stackTrace = ex.StackTrace,
-                    innerException = ex.InnerException != null ? new {
-                        message = ex.InnerException.Message,
-                        stackTrace = ex.InnerException.StackTrace
-                    } : null
+                    message = "Something went wrong on our end. Please try again.",
+                    // Only keep stack trace in development, not production
+                    detail = ex.Message
                 });
             }
         }
@@ -244,9 +254,9 @@ namespace RegistrationService.Controllers
         public async Task<IActionResult> ConfirmationAttendance(string token)
         {
             var student = await _dbContext.RegisteredUsers
-                .FirstOrDefaultAsync(s => s.ConfirmationToken == token); // Are we saying they have a token already and were watingin for them to give it back?
+                .FirstOrDefaultAsync(s => s.ConfirmationToken == token);
 
-            if (student == null)  // ← Add null check!
+            if (student == null)
             {
                 return NotFound(new
                 {
@@ -316,6 +326,7 @@ namespace RegistrationService.Controllers
                 {
                     errors.Add($"Failed to send to {student.Email}: {ex.Message}");
                 }
+                await Task.Delay(1100); // respect Resend 2 req/sec limit
             }
             await _dbContext.SaveChangesAsync();
 
@@ -354,6 +365,7 @@ namespace RegistrationService.Controllers
                 {
                     errors.Add($"Failed to send to {student.Email}: {ex.Message}");
                 }
+                await Task.Delay(1100); // respect Resend 2 req/sec limit
             }
             
             return Ok(new 
@@ -390,7 +402,48 @@ namespace RegistrationService.Controllers
                 message = $"Removed {unconfirmed.Count} unconfirmed students"
             });
         }
+
+        [HttpGet("team-names")]
+        public async Task<IActionResult> GetTeamNames()
+        {
+            try
+            {
+                var names = await _registrationService.GetTeamNamesAsync();
+                return Ok(new { success = true, teamNames = names });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost("trigger-confirmation-emails")]
+        public IActionResult TriggerConfirmationEmails([FromServices] IServiceProvider serviceProvider)
+        {
+            // Start the job in the background without waiting
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    // Create a NEW scope inside the background task
+                    using var scope = serviceProvider.CreateScope();
+                    var scopedProvider = scope.ServiceProvider;
+                    
+                    await ScheduledJobs.SendConfirmationEmailsJob(scopedProvider);
+                    Console.WriteLine("Confirmation emails job completed successfully");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Confirmation emails job failed: {ex.Message}");
+                }
+            });
+            
+            // Return immediately
+            return Ok(new
+            {
+                success = true,
+                message = "Confirmation emails job started in background. Check logs for progress."
+            });
+        }
     }
-
-
 }

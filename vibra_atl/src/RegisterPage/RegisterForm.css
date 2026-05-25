@@ -5,157 +5,520 @@ html, body, #root {
   min-height: 100%;
 }
 
-
+/* ============================================
+   📋 REGISTER PAGE - CITY THEME
+   ============================================ */
 .register-page {
-  /* min-height: 100vh; */
-  background-color: #38487b;
+  min-height: 100vh;
+  background: #38487b;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 80px 20px;
+  padding: 100px 20px 80px;
   color: #ffffff;
   width: 100%;
+  position: relative;
+  overflow: hidden;
 }
 
+/* Abstract background shapes */
+.register-page::before {
+  content: '';
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(114, 170, 191, 0.15) 0%, transparent 70%);
+  top: 10%;
+  left: 5%;
+  border-radius: 50%;
+  filter: blur(80px);
+  z-index: 0;
+}
+
+.register-page::after {
+  content: '';
+  position: absolute;
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(212, 63, 39, 0.12) 0%, transparent 70%);
+  bottom: 15%;
+  right: 10%;
+  border-radius: 50%;
+  filter: blur(80px);
+  z-index: 0;
+}
+
+/* ============================================
+   📝 TITLE
+   ============================================ */
 .register-title {
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  font-weight: 700;
-  margin-bottom: 40px;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 900;
+  font-family: 'Bungee', cursive;
+  margin-bottom: 50px;
+  text-align: center;
+  color: #72aabf;
+  text-shadow: 
+    3px 3px 0px rgba(0, 0, 0, 0.3),
+    0 0 30px rgba(114, 170, 191, 0.4);
+  position: relative;
+  z-index: 10;
+  letter-spacing: 0.02em;
 }
 
+/* ============================================
+   📋 FORM CONTAINER
+   ============================================ */
 .register-form {
   width: 100%;
-  max-width: 520px;
-  background-color: rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-
-  padding: 40px;
+  max-width: 600px;
+  background: rgba(25, 40, 87, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 24px;
+  border: 2px solid rgba(114, 170, 191, 0.3);
+  padding: 50px 40px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
+  position: relative;
   z-index: 10;
-  background: rgba(68, 68, 68, 0.25);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 
+    0 15px 50px rgba(0, 0, 0, 0.5),
+    inset 0 2px 4px rgba(255, 255, 255, 0.1);
 }
 
+/* Corner accent */
+.register-form::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  width: 60px;
+  height: 60px;
+  border-top: 4px solid #72aabf;
+  border-left: 4px solid #72aabf;
+  border-radius: 24px 0 0 0;
+}
+
+.register-form::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 60px;
+  height: 60px;
+  border-bottom: 4px solid #d43f27;
+  border-right: 4px solid #d43f27;
+  border-radius: 0 0 24px 0;
+}
+
+/* ============================================
+   📝 INPUT FIELDS
+   ============================================ */
 .register-form input,
 .register-form select,
 .register-form textarea {
   width: 100%;
-  padding: 14px 16px;
-  border-radius: 10px;
-  border: none;
+  padding: 16px 18px;
+  border-radius: 12px;
+  border: 2px solid rgba(114, 170, 191, 0.2);
+  background: rgba(255, 255, 255, 0.95);
   outline: none;
   font-size: 1rem;
+  font-weight: 500;
+  color: #2d3e6f;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.register-form input:focus,
+.register-form select:focus,
+.register-form textarea:focus {
+  border-color: #72aabf;
+  background: #ffffff;
+  box-shadow: 
+    0 0 0 3px rgba(114, 170, 191, 0.2),
+    0 4px 12px rgba(114, 170, 191, 0.15);
+  transform: translateY(-2px);
 }
 
 .register-form input::placeholder,
 .register-form textarea::placeholder {
   color: #888888;
+  font-weight: 400;
 }
 
+/* Select dropdown styling */
+.register-form select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%2372aabf' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 40px;
+}
+
+/* ============================================
+   🎛️ GROUP SECTION
+   ============================================ */
 .group-section {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px;
+  padding: 20px;
+  background: rgba(114, 170, 191, 0.08);
+  border-radius: 12px;
+  border-left: 4px solid #72aabf;
 }
 
-.group-section label {
-  font-weight: 600;
+.group-section > label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #ffffff;
+  margin-bottom: 4px;
 }
 
 .radio-group {
   display: flex;
-  gap: 24px;
+  gap: 32px;
 }
 
 .radio-group label {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 10px;
   cursor: pointer;
+  font-weight: 500;
+  color: #ffffff;
+  transition: color 0.2s ease;
 }
 
-button {
-  margin-top: 12px;
-  padding: 14px;
+.radio-group label:hover {
+  color: #72aabf;
+}
+
+.radio-group input[type="radio"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #72aabf;
+}
+
+/* Group name input when visible */
+.group-section input[name="groupName"] {
+  margin-top: 8px;
+  border-color: rgba(114, 170, 191, 0.3);
+}
+
+/* ============================================
+   📎 RESUME SECTION
+   ============================================ */
+.resume-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  background: rgba(212, 63, 39, 0.08);
+  border-radius: 12px;
+  border-left: 4px solid #d43f27;
+}
+
+.resume-section label {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #ffffff;
+}
+
+.resume-section input[type="file"] {
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px dashed rgba(212, 63, 39, 0.3);
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.resume-section input[type="file"]:hover {
+  border-color: #d43f27;
+  background: #ffffff;
+}
+
+/* ============================================
+   🔥 SUBMIT BUTTON
+   ============================================ */
+.register-form button[type="submit"] {
+  margin-top: 20px;
+  padding: 18px 32px;
   border-radius: 12px;
   border: none;
-  background-color: #d43f27;
+  background: linear-gradient(135deg, #d43f27 0%, #ff6b6b 100%);
   color: #ffffff;
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: 1.2rem;
+  font-weight: 700;
+  font-family: 'Bungee', cursive;
   cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
+  box-shadow: 
+    5px 5px 0px rgba(0, 0, 0, 0.3),
+    0 10px 30px rgba(212, 63, 39, 0.4);
+  position: relative;
+  overflow: hidden;
 }
 
-button:hover {
-  background-color: #ff6a4d;
+.register-form button[type="submit"]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
 }
 
+.register-form button[type="submit"]:hover {
+  transform: translateY(-3px);
+  box-shadow: 
+    7px 7px 0px rgba(0, 0, 0, 0.4),
+    0 15px 40px rgba(212, 63, 39, 0.6);
+}
+
+.register-form button[type="submit"]:hover::before {
+  left: 100%;
+}
+
+.register-form button[type="submit"]:active {
+  transform: translateY(-1px);
+}
+
+.register-form button[type="submit"]:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ============================================
+   🏙️ WHITE CITY BACKGROUND
+   ============================================ */
 .WhiteCity {
   position: absolute;
-
-  width:103%;
+  bottom: 0;
+  left: 0;
+  width: 100%;
   height: auto;
   z-index: 1;
-  pointer-events: none; 
-  opacity: 0.9;
-
+  pointer-events: none;
+  opacity: 0.15;
+  mix-blend-mode: overlay;
+  filter: brightness(1.2);
 }
 
-/* Popup styles */
+/* ============================================
+   🎉 POPUP OVERLAY
+   ============================================ */
 .popup-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(56, 72, 123, 0.85);
+  background-color: rgba(25, 40, 87, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  animation: fadeIn 0.3s ease;
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ============================================
+   ✅ POPUP CONTENT
+   ============================================ */
 .popup-content {
   background: linear-gradient(135deg, #38487b 0%, #4a5d96 100%);
-  padding: 40px;
-  border-radius: 16px;
+  padding: 50px 40px;
+  border-radius: 24px;
+  border: 2px solid rgba(114, 170, 191, 0.3);
   text-align: center;
-  max-width: 400px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  max-width: 450px;
+  width: 90%;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    inset 0 2px 4px rgba(255, 255, 255, 0.1);
+  animation: slideUp 0.4s ease;
+  position: relative;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Corner accent on popup */
+.popup-content::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  width: 50px;
+  height: 50px;
+  border-top: 4px solid #72aabf;
+  border-left: 4px solid #72aabf;
+  border-radius: 24px 0 0 0;
 }
 
 .popup-content h2 {
   margin-top: 0;
   color: #ffffff;
-  font-size: 28px;
-  font-weight: 700;
-  margin-bottom: 15px;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  font-weight: 900;
+  font-family: 'Bungee', cursive;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .popup-content p {
-  color: #e0e6f5;
-  margin: 20px 0 30px 0;
-  font-size: 16px;
-  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.95);
+  margin: 20px 0 35px 0;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  font-weight: 500;
 }
 
 .popup-content button {
-  background-color: #d43f27;
+  background: linear-gradient(135deg, #d43f27 0%, #ff6b6b 100%);
   color: white;
-  border: none;
-  padding: 12px 40px;
+  border: 3px solid #ffffff;
+  padding: 16px 50px;
   border-radius: 12px;
   cursor: pointer;
-  font-size: 16px;
-  font-weight: 600;
-  transition: background-color 0.3s;
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-family: 'Bungee', cursive;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
   margin-top: 0;
+  box-shadow: 
+    4px 4px 0px rgba(0, 0, 0, 0.3),
+    0 8px 24px rgba(212, 63, 39, 0.4);
 }
 
 .popup-content button:hover {
-  background-color: #ff6a4d;
+  transform: translateY(-3px);
+  box-shadow: 
+    6px 6px 0px rgba(0, 0, 0, 0.4),
+    0 12px 32px rgba(212, 63, 39, 0.6);
+  background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+}
+
+/* ============================================
+   📱 RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+  .register-page {
+    padding: 80px 15px 60px;
+  }
+
+  .register-title {
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+  }
+
+  .register-form {
+    padding: 40px 30px;
+    max-width: 100%;
+  }
+
+  .radio-group {
+    gap: 24px;
+  }
+
+  .popup-content {
+    padding: 40px 30px;
+  }
+
+  .popup-content h2 {
+    font-size: 2rem;
+  }
+
+  .popup-content button {
+    padding: 14px 40px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .register-form {
+    padding: 30px 20px;
+  }
+
+  .register-form input,
+  .register-form select {
+    padding: 14px 16px;
+    font-size: 0.95rem;
+  }
+
+  .group-section,
+  .resume-section {
+    padding: 16px;
+  }
+
+  .radio-group {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .register-form button[type="submit"] {
+    font-size: 1rem;
+    padding: 16px 24px;
+  }
+}
+
+.autocomplete-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.team-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-radius: 0 0 5px 5px;
+  max-height: 200px;
+  overflow-y: auto;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.team-suggestions li {
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.team-suggestions li:hover {
+  background: #f0f8ff;
+  color: #72aabf;
 }

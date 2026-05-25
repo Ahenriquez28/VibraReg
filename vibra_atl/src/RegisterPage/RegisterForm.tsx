@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./RegisterForm.css";
 import WhiteCity from '../../public/WhiteCity.png';
 import type { RegisterDTO } from "../models/RegisterDTO";
@@ -30,11 +30,30 @@ function RegisterForm() {
   const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [selectedSchool, setSelectedSchool] = useState("");
+  const [availableTeams, setAvailableTeams] = useState<string[]>([]);
+  const [selectedTeam, setSelectedTeam] = useState("");
+
+  useEffect(() => {
+    // Fetch available team names when component mounts
+    const fetchTeamNames = async () => {
+      try {
+        const API_BASE_URL = import.meta.env.VITE_API_URL;
+        const response = await fetch(`${API_BASE_URL}/team-names`);
+        const data = await response.json();
+        if (data.success && data.teamNames) {
+          setAvailableTeams(data.teamNames);
+        }
+      } catch (error) {
+        console.error('Failed to fetch team names:', error);
+      }
+    };
+
+    fetchTeamNames();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    console.log("Form submitted! hasGroup =", hasGroup); 
 
     const form = e.currentTarget;
     const formData = new FormData(form);
@@ -51,8 +70,16 @@ function RegisterForm() {
       ? (formData.get("otherSchool") as string)
       : selectedSchool;
 
-    const rawGroupName = formData.get("groupName") as string | null;
-    const cleanedGroupName = rawGroupName && hasGroupValue ? rawGroupName.trim().toLowerCase() : undefined;
+    // Get group name - either from dropdown or custom input
+    let cleanedGroupName: string | undefined = undefined;
+    if (hasGroupValue) {
+      if (selectedTeam === "custom") {
+        const customTeam = formData.get("customTeamName") as string;
+        cleanedGroupName = customTeam ? customTeam.trim().toLowerCase() : undefined;
+      } else {
+        cleanedGroupName = selectedTeam ? selectedTeam.trim().toLowerCase() : undefined;
+      }
+    }
 
     const dto: RegisterDTO = {
       fullName: fullName,
@@ -61,7 +88,7 @@ function RegisterForm() {
       gpa: formData.get("gpa") as string,
       hasGroup: hasGroupValue,
       groupName: cleanedGroupName,
-      resume: resumeFile ?? undefined, // Resume is optional - undefined if not uploaded
+      resume: resumeFile ?? undefined,
     };
 
     try {
@@ -69,7 +96,6 @@ function RegisterForm() {
 
       Object.entries(dto).forEach(([key, value]) => {
         if (value !== undefined) {
-          // Capitalize first letter to match C# conventions (FullName, Email, etc.)
           const capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1);
           
           if (key === "resume" && value instanceof File) {
@@ -93,10 +119,13 @@ function RegisterForm() {
         setHasGroup("no");
         setResumeFile(null);
         setSelectedSchool("");
+        setSelectedTeam("");
       } else {
         const errorData = await res.json();  
-        console.log("Full error from API:", JSON.stringify(errorData, null, 2));  // ✅ Changed this line
-        setErrorMessage("Failed to submit registration. Please try again.");
+        console.log("Full error from API:", JSON.stringify(errorData, null, 2));
+        
+        const userMessage = errorData.message || "Failed to submit registration. Please try again.";
+        setErrorMessage(userMessage);
         setShowErrorPopup(true);
       }
     } catch {
@@ -170,14 +199,40 @@ function RegisterForm() {
 
           {hasGroup === "yes" && (
             <>
-              <input
-                name="groupName"
-                type="text"
-                placeholder="Group Name"
+              <p className="helper-text">
+                Team capacity is up to 4 members.
+              </p>
+              
+              <select
+                value={selectedTeam}
+                onChange={(e) => setSelectedTeam(e.target.value)}
                 required={hasGroup === "yes"}
-                style={{ display: hasGroup === "yes" ? "block" : "none" }}
-              />
+              >
+                <option value="">Select existing team or create new</option>
+                {availableTeams.map((team) => (
+                  <option key={team} value={team}>
+                    {team.replace(/!/g, '')} {/* Display without ! */}
+                  </option>
+                ))}
+                <option value="custom">➕ Create New Team</option>
+              </select>
+
+              {selectedTeam === "custom" && (
+                <input
+                  name="customTeamName"
+                  type="text"
+                  placeholder="Enter new team name"
+                  required
+                  style={{ marginTop: '10px' }}
+                />
+              )}
             </>
+          )}
+
+          {hasGroup === "no" && (
+            <p className="helper-text">
+              If you don't have a group, our team will place you in a team!
+            </p>
           )}
         </div>
 
@@ -187,7 +242,6 @@ function RegisterForm() {
             type="file"
             accept=".pdf,.png,.jpg,.jpeg"
             onChange={(e) => setResumeFile(e.target.files ? e.target.files[0] : null)}
-            // No 'required' attribute - making it optional
           />
         </div>
 

@@ -23,25 +23,29 @@ builder.Services.AddHttpClient<IAuthProxy, AuthProxy>(client =>
 
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(policy =>
+    options.AddPolicy("AllowFrontend", policy =>
     {
         policy.WithOrigins(
-                "http://localhost",           // Docker nginx
-                "http://localhost:80",        // Docker nginx with port
-                "http://localhost:5173",      // Local dev
-                "http://vibra_atl",           // Docker container name
-                "http://frontend"             // Docker service name
+                "http://localhost",
+                "http://localhost:80",
+                "http://localhost:5173",
+                "http://vibra_atl",
+                "http://frontend",
+                "http://165.245.130.1",
+                "http://vibraatl.com",
+                "https://vibraatl.com",
+                "https://www.vibraatl.com"
               )
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
     });
 });
-
 var app = builder.Build();
 
 // Use CORS before routing
 app.UseCors();
+app.UseCors("AllowFrontend");
 
 // Map controllers
 app.MapControllers();

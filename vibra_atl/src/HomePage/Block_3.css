@@ -1,133 +1,1138 @@
-/* ===== Overall Third Block ===== */
-.Third-block {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-  background-color: #38487b;
-  height: 75vh;
-}
-@media ((min-width: 1250px) and (max-width: 1800px)) {
-
-  .Third-block{
-    height: 750px !important;
-}
+/* ============================================
+   🎨 STREET ART THIRD BLOCK - RAW & CLEAN
+   ============================================ */
+.third-block {
+    width: 100%;
+    min-height: 75vh;
+    background: #38487b;
+    position: relative;
+    overflow: hidden;
+    padding: 60px 0;
 }
 
-/* ==== Star is solo container === */
-.SideCity {
-  position: absolute;
-  /* left: 0; */
-  /* top: 50%; */
-  /* transform: translateY(-50%);  */
-  width: 80%; 
-  height: auto;
-
-  align-self: Start;
-  margin-top: 8%;
-  /* margin-top: 10%; */
-  z-index: 1;
-
-  pointer-events: none; /* prevents interaction issues */
+/* ============================================
+   🎨 SUBTLE SPRAY PAINT ACCENTS
+   ============================================ */
+.paint-splatters {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 1;
 }
 
-/* ===== Location (icon + address) ===== */
-.Location {
-  display: flex;
-  align-items: center;      /* vertical alignment */
-  gap: 12px;                /* space between icon & text */
-  background-color: #192857;
-  width: 100%;
-  padding: 16px 24px;
-  box-sizing: border-box;
-  height: 10rem !important;
-  z-index: 10;
+.splatter {
+    position: absolute;
+    opacity: 0.12;
+    filter: blur(1px);
 }
 
-/* Drop point icon */
-.dropPoint {
-  width: 8rem;
-  height: auto;
-  z-index: 10;
+.splatter-1 {
+    width: 200px;
+    height: 200px;
+    background: rgba(212, 63, 39, 0.3);
+    top: 10%;
+    left: 5%;
+    clip-path: polygon(30% 0%, 70% 10%, 100% 40%, 90% 70%, 60% 100%, 20% 90%, 0% 50%, 10% 20%);
 }
 
-/* Address text */
-.Address {
-  font-size: 3rem;
-  color: white;
-  font-weight: 500;
-  font-family: 'Bungee', cursive;
-  z-index: 10;
+.splatter-2 {
+    width: 180px;
+    height: 180px;
+    background: rgba(114, 170, 191, 0.3);
+    top: 60%;
+    right: 8%;
+    clip-path: polygon(50% 0%, 80% 20%, 100% 60%, 75% 100%, 25% 100%, 0% 60%, 20% 20%);
 }
 
-/* ===== Location View ===== */
-.Location_View {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  /* gap: 32px; */
-  transform: translateY(10%);
-  z-index: 10;
-  /* margin-left: 5%; */
+.splatter-3 {
+    width: 150px;
+    height: 150px;
+    background: rgba(255, 211, 61, 0.3);
+    bottom: 20%;
+    left: 15%;
+    clip-path: polygon(50% 0%, 90% 30%, 100% 70%, 60% 100%, 10% 80%, 0% 40%, 30% 10%);
 }
 
-/* Text container */
-.Address-Text {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  max-width: 50%;
-  transform: translateX(10%);
-  align-items: start;
-  z-index: 10;
-  margin-left: 5%;
+/* ============================================
+   🏙️ SIDE CITY - ARTISTIC TREATMENT
+   ============================================ */
+.side-city {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 30%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 2;
+    opacity: 0.25;
+    mix-blend-mode: overlay;
+    filter: contrast(1.2) grayscale(20%);
 }
 
-/* Title text */
-.Address-Text span:first-child {
-  font-size: 6.5rem;
-  font-weight: 700;
-  /* color: #72aabf; */
-  color: #d43f27;
-  font-family: 'Bungee', cursive;
-  z-index: 10;
-
+.city-overlay-effect {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 30%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(56, 72, 123, 0.4) 40%,
+        #38487b 100%
+    );
+    z-index: 3;
+    pointer-events: none;
 }
 
-/* Subtitle text */
-.Address-Text span:nth-child(2) {
-  font-size: 2.5rem;
-  font-weight: 400;
-   /* vibrant red */
-   width:60%;
-  color: white;
-  
+/* ============================================
+   📍 LOCATION PIN - CLEAN STREET TAG
+   ============================================ */
+.location-pin-section {
+    position: relative;
+    z-index: 10;
+    padding: 0 5%;
+    margin-bottom: 50px;
 }
 
-/* Image on the right */
-.cmi {
-  width: 40%;
-  /* max-width: 500px; */
-  height: auto;
-  transform: translateX(-5%);
-  /* margin-right: 5%; */
+.pin-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: rgba(25, 40, 87, 0.7);
+    padding: 20px 30px;
+    border-radius: 4px;
+    border-left: 5px solid #d43f27;
+    box-shadow: 
+        0 8px 24px rgba(0, 0, 0, 0.4),
+        inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    max-width: 900px;
 }
 
-.pdf-link{
-    background-color: #ffff;
-    border-radius: 12px;
+.drop-point {
+    width: 70px;
+    height: auto;
+    filter: drop-shadow(0 4px 8px rgba(212, 63, 39, 0.5));
+}
+
+.address-tag {
+    position: relative;
+    flex: 1;
+}
+
+.tag-stripe {
+    position: absolute;
+    left: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 70%;
+    background: #d43f27;
+}
+
+.address-text {
+    font-size: clamp(1.2rem, 2.5vw, 2.5rem);
+    font-weight: 700;
     font-family: 'Bungee', cursive;
-    padding: 12px 28px;
-    color: #d43f27;
-    /* margin-top: 3%; */
-    transition: background 0.3s ease;
-    cursor: pointer;
-    font-size: 1.5rem;
-    margin-top: 5%;
-}
-.pdf-link:hover{
-    color:white;
-    background-color:#d43f27 ;
+    color: #ffffff;
+    letter-spacing: 0.05em;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
 }
 
+/* ============================================
+   🎨 VENUE CONTENT
+   ============================================ */
+.venue-content {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 60px;
+    padding: 0 8%;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+/* ============================================
+   📝 LEFT SIDE - GRAFFITI TEXT
+   ============================================ */
+.venue-left {
+    flex: 1;
+    max-width: 600px;
+}
+
+.venue-title-container {
+    position: relative;
+    margin-bottom: 40px;
+}
+
+.venue-title {
+    font-family: 'Bungee', cursive;
+    font-size: clamp(3rem, 8vw, 8rem);
+    line-height: 0.9;
+    margin: 0;
+    position: relative;
+    z-index: 2;
+}
+
+.title-line-1,
+.title-line-2 {
+    display: block;
+    color: #d43f27;
+    text-shadow: 
+        3px 3px 0px rgba(0, 0, 0, 0.3),
+        0 0 20px rgba(212, 63, 39, 0.4);
+}
+
+.title-line-2 {
+    transform: translateX(20px);
+}
+
+/* Spray paint outline - subtle */
+.title-outline {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    font-family: 'Bungee', cursive;
+    font-size: clamp(3rem, 8vw, 8rem);
+    line-height: 0.9;
+    color: transparent;
+    -webkit-text-stroke: 2px rgba(212, 63, 39, 0.2);
+    z-index: 1;
+}
+
+/* ============================================
+   🎯 STENCIL TEXT - CLEAN
+   ============================================ */
+.university-name {
+    margin-bottom: 40px;
+}
+
+.stencil-text {
+    font-size: clamp(1.3rem, 2.5vw, 2.2rem);
+    font-weight: 600;
+    color: #ffffff;
+    line-height: 1.4;
+    position: relative;
+    padding-left: 18px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.stencil-text::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 70%;
+    background: #72aabf;
+}
+
+.stencil-text:nth-child(2)::before {
+    background: #d43f27;
+}
+
+.stencil-text:nth-child(3)::before {
+    background: #ffd93d;
+}
+
+/* ============================================
+   🔥 AGENDA BUTTON - STREET ART CLEAN
+   ============================================ */
+.agenda-button {
+    position: relative;
+    display: inline-block;
+    padding: 18px 40px;
+    font-size: clamp(1rem, 1.5vw, 1.5rem);
+    font-weight: 700;
+    font-family: 'Bungee', cursive;
+    color: #ffffff;
+    background: #d43f27;
+    border: 3px solid #ffffff;
+    border-radius: 0;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 
+        5px 5px 0px rgba(0, 0, 0, 0.3),
+        0 8px 20px rgba(212, 63, 39, 0.3);
+}
+
+.agenda-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 
+        7px 7px 0px rgba(0, 0, 0, 0.4),
+        0 12px 30px rgba(212, 63, 39, 0.5);
+    background: #ff6b6b;
+}
+
+.button-text {
+    position: relative;
+    z-index: 2;
+}
+
+.button-shine {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+.agenda-button:hover .button-shine {
+    left: 100%;
+}
+
+/* ============================================
+   🖼️ RIGHT SIDE - CLEAN FRAME
+   ============================================ */
+.venue-right {
+    flex: 1;
+    max-width: 600px;
+    position: relative;
+}
+
+.image-frame {
+    position: relative;
+    padding: 12px;
+    background: rgba(25, 40, 87, 0.5);
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.5),
+        inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    transform: rotate(1deg);
+    transition: transform 0.3s ease;
+}
+
+.image-frame:hover {
+    transform: rotate(0deg);
+}
+
+/* Corner brackets - clean */
+.frame-corner {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    border: 3px solid #72aabf;
+}
+
+.frame-corner.tl {
+    top: -3px;
+    left: -3px;
+    border-right: none;
+    border-bottom: none;
+}
+
+.frame-corner.tr {
+    top: -3px;
+    right: -3px;
+    border-left: none;
+    border-bottom: none;
+}
+
+.frame-corner.bl {
+    bottom: -3px;
+    left: -3px;
+    border-right: none;
+    border-top: none;
+}
+
+.frame-corner.br {
+    bottom: -3px;
+    right: -3px;
+    border-left: none;
+    border-top: none;
+}
+
+.cmi-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: brightness(1.05) contrast(1.1);
+}
+
+/* ============================================
+   📼 TAPE STRIPS - SUBTLE
+   ============================================ */
+.tape-strip {
+    position: absolute;
+    width: 100px;
+    height: 25px;
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(5px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    z-index: 5;
+}
+
+.tape-top {
+    top: -12px;
+    right: 20%;
+    transform: rotate(-4deg);
+}
+
+.tape-bottom {
+    bottom: -12px;
+    left: 20%;
+    transform: rotate(3deg);
+}
+
+/* ============================================
+   📐 ABSTRACT SHAPES - RIGID & GEOMETRIC
+   ============================================ */
+.abstract-shapes {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.shape {
+    position: absolute;
+    opacity: 0.15;
+    border: 2px solid;
+}
+
+.shape-circle {
+    width: 120px;
+    height: 120px;
+    border-color: #ffd93d;
+    border-radius: 50%;
+    top: 20%;
+    right: 15%;
+}
+
+.shape-triangle {
+    width: 100px;
+    height: 100px;
+    top: 60%;
+    left: 10%;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    border-color: #72aabf;
+}
+
+.shape-square {
+    width: 90px;
+    height: 90px;
+    bottom: 18%;
+    right: 28%;
+    transform: rotate(45deg);
+    border-color: #d43f27;
+}
+
+/* Extra rigid shapes */
+.abstract-shapes::before,
+.abstract-shapes::after {
+    content: '';
+    position: absolute;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.abstract-shapes::before {
+    width: 60px;
+    height: 60px;
+    top: 45%;
+    right: 5%;
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+}
+
+.abstract-shapes::after {
+    width: 80px;
+    height: 80px;
+    bottom: 35%;
+    left: 5%;
+    border-radius: 50%;
+}
+
+/* ============================================
+   🎨 HALFTONE DOTS - VERY SUBTLE
+   ============================================ */
+.halftone-pattern {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Remove drips - too much */
+.paint-drips {
+    display: none;
+}
+
+/* Remove glitch - too much */
+.image-glitch {
+    display: none;
+}
+
+
+/* ============================================
+   📱 RESPONSIVE
+   ============================================ */
+@media (max-width: 1200px) {
+    .venue-content {
+        flex-direction: column;
+        gap: 40px;
+        padding: 0 5%;
+    }
+    
+    .venue-left,
+    .venue-right {
+        max-width: 100%;
+    }
+    
+    .side-city {
+        width: 40%;
+    }
+    
+    .city-overlay-effect {
+        width: 40%;
+    }
+}
+
+@media (max-width: 768px) {
+    .pin-container {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .address-text {
+        font-size: 1.3rem;
+    }
+    
+    .venue-title {
+        font-size: 4rem;
+    }
+    
+    .title-line-2 {
+        transform: translateX(10px);
+    }
+    
+    .stencil-text {
+        font-size: 1.3rem;
+    }
+    
+    .side-city {
+        width: 50%;
+        opacity: 0.15;
+    }
+}
+
+@media (max-width: 480px) {
+    .third-block {
+        padding: 40px 0;
+    }
+    
+    .agenda-button {
+        padding: 15px 30px;
+        font-size: 1rem;
+    }
+}
+
+/* ============================================
+   🎨 STREET ART THIRD BLOCK - RAW & CLEAN
+   ============================================ */
+.third-block {
+    width: 100%;
+    min-height: 75vh;
+    background: #38487b;
+    position: relative;
+    overflow: hidden;
+    padding: 60px 0;
+}
+
+/* ============================================
+   🟦 BIG ABSTRACT SQUARE BACKGROUND
+   ============================================ */
+.third-block::before {
+    content: '';
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: rgba(45, 62, 111, 0.4);
+    top: 15%;
+    right: -100px;
+    transform: rotate(12deg);
+    z-index: 1;
+    border: 2px solid rgba(114, 170, 191, 0.15);
+}
+
+.third-block::after {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: rgba(35, 50, 95, 0.3);
+    bottom: 10%;
+    right: 10%;
+    transform: rotate(-8deg);
+    z-index: 1;
+    border: 2px solid rgba(212, 63, 39, 0.1);
+}
+
+/* ============================================
+   🎨 SUBTLE SPRAY PAINT ACCENTS
+   ============================================ */
+.paint-splatters {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.splatter {
+    position: absolute;
+    opacity: 0.12;
+    filter: blur(1px);
+}
+
+.splatter-1 {
+    width: 200px;
+    height: 200px;
+    background: rgba(212, 63, 39, 0.3);
+    top: 10%;
+    left: 5%;
+    clip-path: polygon(30% 0%, 70% 10%, 100% 40%, 90% 70%, 60% 100%, 20% 90%, 0% 50%, 10% 20%);
+}
+
+.splatter-2 {
+    width: 180px;
+    height: 180px;
+    background: rgba(114, 170, 191, 0.3);
+    top: 60%;
+    right: 8%;
+    clip-path: polygon(50% 0%, 80% 20%, 100% 60%, 75% 100%, 25% 100%, 0% 60%, 20% 20%);
+}
+
+.splatter-3 {
+    width: 150px;
+    height: 150px;
+    background: rgba(255, 211, 61, 0.3);
+    bottom: 20%;
+    left: 15%;
+    clip-path: polygon(50% 0%, 90% 30%, 100% 70%, 60% 100%, 10% 80%, 0% 40%, 30% 10%);
+}
+
+/* ============================================
+   🏙️ SIDE CITY - ARTISTIC TREATMENT
+   ============================================ */
+.side-city {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 30%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 2;
+    opacity: 0.25;
+    mix-blend-mode: overlay;
+    filter: contrast(1.2) grayscale(20%);
+}
+
+.city-overlay-effect {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 30%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(56, 72, 123, 0.4) 40%,
+        #38487b 100%
+    );
+    z-index: 3;
+    pointer-events: none;
+}
+
+/* ============================================
+   📍 LOCATION PIN - CLEAN STREET TAG
+   ============================================ */
+.location-pin-section {
+    position: relative;
+    z-index: 10;
+    padding: 0 5%;
+    margin-bottom: 50px;
+}
+
+.pin-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background: rgba(25, 40, 87, 0.7);
+    padding: 20px 30px;
+    border-radius: 4px;
+    border-left: 5px solid #d43f27;
+    box-shadow: 
+        0 8px 24px rgba(0, 0, 0, 0.4),
+        inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    max-width: 900px;
+}
+
+.drop-point {
+    width: 70px;
+    height: auto;
+    filter: drop-shadow(0 4px 8px rgba(212, 63, 39, 0.5));
+}
+
+.address-tag {
+    position: relative;
+    flex: 1;
+}
+
+.tag-stripe {
+    position: absolute;
+    left: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 70%;
+    background: #d43f27;
+}
+
+.address-text {
+    font-size: clamp(1.2rem, 2.5vw, 2.5rem);
+    font-weight: 700;
+    font-family: 'Bungee', cursive;
+    color: #ffffff;
+    letter-spacing: 0.05em;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================
+   🎨 VENUE CONTENT
+   ============================================ */
+.venue-content {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 60px;
+    padding: 0 8%;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+/* ============================================
+   📝 LEFT SIDE - CYAN GRAFFITI TEXT
+   ============================================ */
+.venue-left {
+    flex: 1;
+    max-width: 600px;
+}
+
+.venue-title-container {
+    position: relative;
+    margin-bottom: 40px;
+}
+
+.venue-title {
+    font-family: 'Bungee', cursive;
+    font-size: clamp(3rem, 8vw, 8rem);
+    line-height: 0.9;
+    margin: 0;
+    position: relative;
+    z-index: 2;
+}
+
+.title-line-1,
+.title-line-2 {
+    display: block;
+    color: #72aabf; /* CYAN */
+    text-shadow: 
+        3px 3px 0px rgba(0, 0, 0, 0.3),
+        0 0 20px rgba(114, 170, 191, 0.4);
+}
+
+.title-line-2 {
+    transform: translateX(20px);
+}
+
+/* Spray paint outline - cyan */
+.title-outline {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    font-family: 'Bungee', cursive;
+    font-size: clamp(3rem, 8vw, 8rem);
+    line-height: 0.9;
+    color: transparent;
+    -webkit-text-stroke: 2px rgba(114, 170, 191, 0.2);
+    z-index: 1;
+}
+
+/* ============================================
+   🎯 STENCIL TEXT - CLEAN
+   ============================================ */
+.university-name {
+    margin-bottom: 40px;
+}
+
+.stencil-text {
+    font-size: clamp(1.3rem, 2.5vw, 2.2rem);
+    font-weight: 600;
+    color: #ffffff;
+    line-height: 1.4;
+    position: relative;
+    padding-left: 18px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.stencil-text::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 70%;
+    background: #72aabf;
+}
+
+.stencil-text:nth-child(2)::before {
+    background: #d43f27;
+}
+
+.stencil-text:nth-child(3)::before {
+    background: #ffd93d;
+}
+
+/* ============================================
+   🔥 AGENDA BUTTON - STREET ART CLEAN
+   ============================================ */
+.agenda-button {
+    position: relative;
+    display: inline-block;
+    padding: 18px 40px;
+    font-size: clamp(1rem, 1.5vw, 1.5rem);
+    font-weight: 700;
+    font-family: 'Bungee', cursive;
+    color: #ffffff;
+    background: #d43f27;
+    border: 3px solid #ffffff;
+    border-radius: 0;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 
+        5px 5px 0px rgba(0, 0, 0, 0.3),
+        0 8px 20px rgba(212, 63, 39, 0.3);
+}
+
+.agenda-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 
+        7px 7px 0px rgba(0, 0, 0, 0.4),
+        0 12px 30px rgba(212, 63, 39, 0.5);
+    background: #ff6b6b;
+}
+
+.button-text {
+    position: relative;
+    z-index: 2;
+}
+
+.button-shine {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+.agenda-button:hover .button-shine {
+    left: 100%;
+}
+
+/* ============================================
+   🖼️ RIGHT SIDE - CLEAN FRAME
+   ============================================ */
+.venue-right {
+    flex: 1;
+    max-width: 600px;
+    position: relative;
+}
+
+.image-frame {
+    position: relative;
+    padding: 12px;
+    background: rgba(25, 40, 87, 0.5);
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.5),
+        inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    transform: rotate(1deg);
+    transition: transform 0.3s ease;
+}
+
+.image-frame:hover {
+    transform: rotate(0deg);
+}
+
+/* Corner brackets - clean */
+.frame-corner {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    border: 3px solid #72aabf;
+}
+
+.frame-corner.tl {
+    top: -3px;
+    left: -3px;
+    border-right: none;
+    border-bottom: none;
+}
+
+.frame-corner.tr {
+    top: -3px;
+    right: -3px;
+    border-left: none;
+    border-bottom: none;
+}
+
+.frame-corner.bl {
+    bottom: -3px;
+    left: -3px;
+    border-right: none;
+    border-top: none;
+}
+
+.frame-corner.br {
+    bottom: -3px;
+    right: -3px;
+    border-left: none;
+    border-top: none;
+}
+
+.cmi-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: brightness(1.05) contrast(1.1);
+}
+
+/* ============================================
+   📼 TAPE STRIPS - SUBTLE
+   ============================================ */
+.tape-strip {
+    position: absolute;
+    width: 100px;
+    height: 25px;
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(5px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    z-index: 5;
+}
+
+.tape-top {
+    top: -12px;
+    right: 20%;
+    transform: rotate(-4deg);
+}
+
+.tape-bottom {
+    bottom: -12px;
+    left: 20%;
+    transform: rotate(3deg);
+}
+
+/* ============================================
+   📐 ABSTRACT SHAPES - RIGID & GEOMETRIC
+   ============================================ */
+.abstract-shapes {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.shape {
+    position: absolute;
+    opacity: 0.15;
+    border: 2px solid;
+}
+
+.shape-circle {
+    width: 120px;
+    height: 120px;
+    border-color: #ffd93d;
+    border-radius: 50%;
+    top: 20%;
+    right: 15%;
+}
+
+.shape-triangle {
+    width: 100px;
+    height: 100px;
+    top: 60%;
+    left: 10%;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    border-color: #72aabf;
+}
+
+.shape-square {
+    width: 90px;
+    height: 90px;
+    bottom: 18%;
+    right: 28%;
+    transform: rotate(45deg);
+    border-color: #d43f27;
+}
+
+/* Extra rigid shapes */
+.abstract-shapes::before,
+.abstract-shapes::after {
+    content: '';
+    position: absolute;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.abstract-shapes::before {
+    width: 60px;
+    height: 60px;
+    top: 45%;
+    right: 5%;
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+}
+
+.abstract-shapes::after {
+    width: 80px;
+    height: 80px;
+    bottom: 35%;
+    left: 5%;
+    border-radius: 50%;
+}
+
+/* ============================================
+   🎨 HALFTONE DOTS - VERY SUBTLE
+   ============================================ */
+.halftone-pattern {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Remove drips - too much */
+.paint-drips {
+    display: none;
+}
+
+/* Remove glitch - too much */
+.image-glitch {
+    display: none;
+}
+
+/* ============================================
+   📱 RESPONSIVE
+   ============================================ */
+@media (max-width: 1200px) {
+    .venue-content {
+        flex-direction: column;
+        gap: 40px;
+        padding: 0 5%;
+    }
+    
+    .venue-left,
+    .venue-right {
+        max-width: 100%;
+    }
+    
+    .side-city {
+        width: 40%;
+    }
+    
+    .city-overlay-effect {
+        width: 40%;
+    }
+    
+    .third-block::before {
+        width: 400px;
+        height: 400px;
+    }
+    
+    .third-block::after {
+        width: 300px;
+        height: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    .pin-container {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .address-text {
+        font-size: 1.3rem;
+    }
+    
+    .venue-title {
+        font-size: 4rem;
+    }
+    
+    .title-line-2 {
+        transform: translateX(10px);
+    }
+    
+    .stencil-text {
+        font-size: 1.3rem;
+    }
+    
+    .side-city {
+        width: 50%;
+        opacity: 0.15;
+    }
+    
+    .third-block::before,
+    .third-block::after {
+        opacity: 0.5;
+    }
+}
+
+@media (max-width: 480px) {
+    .third-block {
+        padding: 40px 0;
+    }
+    
+    .agenda-button {
+        padding: 15px 30px;
+        font-size: 1rem;
+    }
+}

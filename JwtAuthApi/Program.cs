@@ -31,16 +31,20 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(policy =>
     {
         policy.WithOrigins(
-                "http://localhost",           // Docker nginx
-                "http://localhost:80",        // Docker nginx with port
-                "http://localhost:5173"       // Local dev
+                "http://localhost",
+                "http://localhost:80",
+                "http://localhost:5173",
+                "http://vibra_atl",
+                "http://frontend",
+                "http://165.245.130.1",
+                "http://vibraatl.com",
+                "https://vibraatl.com"
               )
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
     });
 });
-
 // Add JWT Authentication
 builder.Services.AddAuthentication(options =>
 {
